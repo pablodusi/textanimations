@@ -10,7 +10,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>
     </RootNamespace>
-    <ProjectGuid>{73A113E8-F815-2650-5480-87DF14FE48FC}</ProjectGuid>
+    <ProjectGuid>{744B31AA-35A9-A5F6-F59B-B8F0D0DE1BE7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -60,14 +60,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AnimationTypeEnum.cs" />
+    <Compile Include="Assets\Scripts\Documentation.cs" />
     <Compile Include="Assets\Scripts\FontsEnum.cs" />
     <Compile Include="Assets\Scripts\TextIndividualLetterConfig.cs" />
     <Compile Include="Assets\Scripts\WordAnimator.cs" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>D:/Bibliotecas/Documentos/Unity Projects/Quick Project/Quick Project/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>D:/Bibliotecas/Documentos/Unity Projects/Text Animations 2/Text Animations/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>D:/Bibliotecas/Documentos/Unity Projects/Quick Project/Quick Project/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>D:/Bibliotecas/Documentos/Unity Projects/Text Animations 2/Text Animations/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Program Files/Unity/Unity 2018.1.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

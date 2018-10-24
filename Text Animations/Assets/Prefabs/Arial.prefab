@@ -76,6 +76,7 @@ MonoBehaviour:
   baseFontSize: 120
   distanceBetweenLetters: {x: 84, y: 0, z: 0}
   sizeRectTransformForThisFontSize: {x: 120, y: 120}
+  fontName: Arial
 --- !u!222 &222224081711611568
 CanvasRenderer:
   m_ObjectHideFlags: 1

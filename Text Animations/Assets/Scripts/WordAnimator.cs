@@ -28,10 +28,13 @@ public class WordAnimator : MonoBehaviour
 	public float fontSizeNormalizedPercentDiff;
 	public GameObject letterPrefab;
 	public GameObject canvasPrefab;
+    public Text textTest;
 
 	private List<Text> lettersText;
 	private Canvas canvas;
 	private float lerp;
+    private int fontSizeOld;
+
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -59,7 +62,6 @@ public class WordAnimator : MonoBehaviour
                 {
                     OnChangeAnimation(animationType);
                 }
-
             }
         }
     }
@@ -113,14 +115,23 @@ public class WordAnimator : MonoBehaviour
 
 	void Awake()
 	{
+        foreach(TextIndividualLetterConfig textIndividualLetterConfig in fontsIndividualLetterConfig)
+        {
+            textIndividualLetterConfig.ForceInitialize();
+        }
+
+        fontSizeOld = fontSize;
+
         CreateLetters ();		
 
 		if (startAtBegining) 
 		{
 			Play ();
 		}
-	
-	}
+
+        textTest.text = "PROBANDO";
+
+    }
 
     void Start()
     {
@@ -154,6 +165,7 @@ public class WordAnimator : MonoBehaviour
           {
                 lettersText[i].rectTransform.localPosition = fontsIndividualLetterConfig[(int)font].text.rectTransform.localPosition + (i * GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters);
                 lettersText[i].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
+                lettersText[i].fontSize = newValue;
           }
 
         //fontsIndividualLetterConfig[(int)font].baseFontSize;
@@ -188,7 +200,8 @@ public class WordAnimator : MonoBehaviour
 		lettersText.Clear ();
 		canvas = (Canvas)GameObject.Instantiate (canvasPrefab, Vector3.zero, Quaternion.identity).GetComponent<Canvas>();
 		
-		canvas.name = fontsIndividualLetterConfig[(int)font].text.font.fontNames[0];
+
+        canvas.name = fontsIndividualLetterConfig[(int)font].fontName;
 		
 		Vector3 adddeltaPosition = Vector3.zero;
 		
@@ -197,8 +210,9 @@ public class WordAnimator : MonoBehaviour
 			Text letterText = (Text)GameObject.Instantiate(letterPrefab,Vector3.zero,Quaternion.identity).GetComponent<Text>();
 			letterText.transform.name = "Letter";
 			letterText.transform.SetParent(canvas.gameObject.transform);
-			letterText.font = fontsIndividualLetterConfig[(int)font].text.font;
-			letterText.fontStyle = fontsIndividualLetterConfig[(int)font].text.fontStyle;
+
+            letterText.font = fontsIndividualLetterConfig[(int)font].text.font;
+            letterText.fontStyle = fontsIndividualLetterConfig[(int)font].text.fontStyle;
 			letterText.fontSize = fontSize;
 			letterText.rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x,GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
 
@@ -243,6 +257,8 @@ public class WordAnimator : MonoBehaviour
 		isPlaying = true;
 		lerp = 0f;
 
+        SetLettersVisible();
+
 		switch (animationType) 
 		{
 			case AnimationTypeEnum.ANIMATION1:
@@ -275,6 +291,16 @@ public class WordAnimator : MonoBehaviour
 
 	void Update()
 	{
+        if(fontSizeOld != fontSize)
+        {
+            fontSizeOld = fontSize;
+
+            if (OnFontSizeChange != null)
+            {
+                OnFontSizeChange(fontSize);
+            }
+        }
+
 		if (isPlaying) 
 		{
 			lerp += Time.deltaTime * speed;
@@ -292,10 +318,27 @@ public class WordAnimator : MonoBehaviour
 				else
 				{
 					Stop();
+                    SetLettersInvisible();
 				}
 			}
 		}
 	}
+
+    private void SetLettersInvisible()
+    {
+        foreach (Text letterText in lettersText)
+        {
+            letterText.color = new Color(letterText.color.r,letterText.color.g,letterText.color.b,0f);
+        }
+    }
+
+    private void SetLettersVisible()
+    {
+        foreach (Text letterText in lettersText)
+        {
+            letterText.color = new Color(letterText.color.r, letterText.color.g, letterText.color.b, 1f);
+        }
+    }
 
 	private void PlayFrame()
 	{
@@ -322,8 +365,9 @@ public class WordAnimator : MonoBehaviour
 	{
 		foreach (Text t in lettersText) 
 		{
-			t.fontSize = ((int)Mathf.Lerp((float)fontsIndividualLetterConfig[(int)font].text.fontSize,(float)fontsIndividualLetterConfig[(int)font].text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
-			t.color = new Color(t.color.r,t.color.g,fontsIndividualLetterConfig[(int)font].text.color.b,Mathf.Lerp(1f,0f,lerp));
+            //t.fontSize = ((int)Mathf.Lerp((float)fontsIndividualLetterConfig[(int)font].text.fontSize,(float)fontsIndividualLetterConfig[(int)font].text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
+            t.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
+            t.color = new Color(t.color.r,t.color.g,fontsIndividualLetterConfig[(int)font].text.color.b,Mathf.Lerp(1f,0f,lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
 
@@ -334,7 +378,7 @@ public class WordAnimator : MonoBehaviour
 	{
 		foreach (Text t in lettersText) 
 		{
-			t.fontSize = ((int)Mathf.Lerp((float)fontsIndividualLetterConfig[(int)font].text.fontSize,(float)fontsIndividualLetterConfig[(int)font].text.fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
+			t.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
 			t.color = new Color(t.color.r,t.color.g,fontsIndividualLetterConfig[(int)font].text.color.b,Mathf.Lerp(1f,0f,lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
@@ -345,7 +389,7 @@ public class WordAnimator : MonoBehaviour
 	{
 		foreach (Text t in lettersText)
 		{
-			t.fontSize = ((int)Mathf.Lerp((float)fontsIndividualLetterConfig[(int)font].text.fontSize,(float)fontsIndividualLetterConfig[(int)font].text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
+			t.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
 			t.color = new Color(t.color.r,t.color.g,t.color.b,Mathf.Lerp(0f,1f,lerp));
 		}
 	}
@@ -354,7 +398,7 @@ public class WordAnimator : MonoBehaviour
 	{
 		foreach (Text t in lettersText)
 		{
-			t.fontSize = ((int)Mathf.Lerp((float)fontsIndividualLetterConfig[(int)font].text.fontSize,(float)fontsIndividualLetterConfig[(int)font].text.fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
+			t.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
 			t.color = new Color(t.color.r,t.color.g,t.color.b,Mathf.Lerp(0f,1f,lerp));
 		}
 	}
