@@ -15,6 +15,7 @@ public class WordAnimator : MonoBehaviour
 	public FontsEnum font;
 	public AnimationTypeEnum animationType;
 	public int fontSize;
+    public Vector3 position;
 	public bool startAtBegining;
 	public bool isPlaying;
 	public float speed = 1f;
@@ -169,9 +170,12 @@ public class WordAnimator : MonoBehaviour
 
           for(int i = 0; i < lettersText.Count; i++)
           {
-                lettersText[i].rectTransform.localPosition = fontsIndividualLetterConfig[(int)font].text.rectTransform.localPosition + (i * GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters);
-                //  ATTENTION: The sizeDelta has to be set on the font letter prefab with the exact amount it's setted in the WordAnimator script. Otherwise, it will be errors.
-                lettersText[i].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
+            //lettersText[i].rectTransform.localPosition = fontsIndividualLetterConfig[(int)font].text.rectTransform.localPosition + (i * GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters);
+            lettersText[i].rectTransform.localPosition = position + (i * GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters);
+
+
+            //  ATTENTION: The sizeDelta has to be set on the font letter prefab with the exact amount it's setted in the WordAnimator script. Otherwise, it will be errors.
+            lettersText[i].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
                 lettersText[i].fontSize = newValue;
           }
 
@@ -244,7 +248,7 @@ public class WordAnimator : MonoBehaviour
 			    letterText.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
 			    letterText.text = lineBreaks + word[current].ToString();
 			    //Debug.Log(letter.ToString());
-			    letterText.rectTransform.position = fontsIndividualLetterConfig[(int)font].text.rectTransform.position;
+			    letterText.rectTransform.position = position;
 			    //Debug.Log(text.rectTransform.position);
 			    letterText.rectTransform.rotation = fontsIndividualLetterConfig[(int)font].text.rectTransform.rotation;
 			    letterText.rectTransform.localScale = fontsIndividualLetterConfig[(int)font].text.rectTransform.localScale;
