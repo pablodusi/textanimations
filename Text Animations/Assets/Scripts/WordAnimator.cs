@@ -164,6 +164,7 @@ public class WordAnimator : MonoBehaviour
           for(int i = 0; i < lettersText.Count; i++)
           {
                 lettersText[i].rectTransform.localPosition = fontsIndividualLetterConfig[(int)font].text.rectTransform.localPosition + (i * GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters);
+                //  ATTENTION: The sizeDelta has to be set on the font letter prefab with the exact amount it's setted in the WordAnimator script. Otherwise, it will be errors.
                 lettersText[i].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
                 lettersText[i].fontSize = newValue;
           }
