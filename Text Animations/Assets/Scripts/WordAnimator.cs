@@ -129,7 +129,7 @@ public class WordAnimator : MonoBehaviour
 			Play ();
 		}
 
-        textTest.text = "PROBANDO";
+        //textTest.text = "PROBANDO\nPROBANDO";
 
     }
 
@@ -173,8 +173,6 @@ public class WordAnimator : MonoBehaviour
         //fontsIndividualLetterConfig[¨(int)font].sizeRectTransformForThisFontSize
 
         //letter.rectTransform.localPosition =    
-
-
     }
 
     public void CreateLetters()
@@ -204,43 +202,74 @@ public class WordAnimator : MonoBehaviour
         canvas.name = fontsIndividualLetterConfig[(int)font].fontName;
 		
 		Vector3 adddeltaPosition = Vector3.zero;
-		
-		foreach (char letter in word) 
-		{
-			Text letterText = (Text)GameObject.Instantiate(letterPrefab,Vector3.zero,Quaternion.identity).GetComponent<Text>();
-			letterText.transform.name = "Letter";
-			letterText.transform.SetParent(canvas.gameObject.transform);
 
-            letterText.font = fontsIndividualLetterConfig[(int)font].text.font;
-            letterText.fontStyle = fontsIndividualLetterConfig[(int)font].text.fontStyle;
-			letterText.fontSize = fontSize;
-			letterText.rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x,GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
+        int newLineCounter = 0;
+        int current = 0;
 
-			letterText.lineSpacing = fontsIndividualLetterConfig[(int)font].text.lineSpacing;
-			letterText.alignment = fontsIndividualLetterConfig[(int)font].text.alignment;
-			letterText.alignByGeometry = fontsIndividualLetterConfig[(int)font].text.alignByGeometry;
-			letterText.horizontalOverflow = fontsIndividualLetterConfig[(int)font].text.horizontalOverflow;
-			letterText.verticalOverflow = fontsIndividualLetterConfig[(int)font].text.verticalOverflow;
-			letterText.color = fontsIndividualLetterConfig[(int)font].text.color;
-			letterText.material = fontsIndividualLetterConfig[(int)font].text.material;
-			letterText.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
-			letterText.text = letter.ToString();
-			//Debug.Log(letter.ToString());
-			letterText.rectTransform.position = fontsIndividualLetterConfig[(int)font].text.rectTransform.position;
-			//Debug.Log(text.rectTransform.position);
-			letterText.rectTransform.rotation = fontsIndividualLetterConfig[(int)font].text.rectTransform.rotation;
-			letterText.rectTransform.localScale = fontsIndividualLetterConfig[(int)font].text.rectTransform.localScale;
-			letterText.rectTransform.localPosition = letterText.rectTransform.position + adddeltaPosition;
-			adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
+        //for (char letter in word) 
+        while(current < word.Length)
+        {
+            if(word[current] != '/')
+            {
+                string lineBreaks = string.Empty;
 
-			lettersText.Add(letterText);
-			//Debug.Log(adddeltaPosition);
-			//Debug.Log(letterText.rectTransform.anchoredPosition);
-			//Debug.Log(letterText.rectTransform.localPosition);
-			//Debug.Log(adddeltaPosition);
-			//Debug.Log(letterText.rectTransform.localPosition);
-			//letterText.rectTransform.anchoredPosition += new Vector2(adddeltaPosition.x,adddeltaPosition.y);
-		}
+                for(int i = 0; i < newLineCounter; i++)
+                {
+                    lineBreaks += "\n";
+                }
+
+                Text letterText = (Text)GameObject.Instantiate(letterPrefab,Vector3.zero,Quaternion.identity).GetComponent<Text>();
+			    letterText.transform.name = "Letter";
+			    letterText.transform.SetParent(canvas.gameObject.transform);
+
+                letterText.font = fontsIndividualLetterConfig[(int)font].text.font;
+                letterText.fontStyle = fontsIndividualLetterConfig[(int)font].text.fontStyle;
+			    letterText.fontSize = fontSize;
+			    letterText.rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x,GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
+
+			    letterText.lineSpacing = fontsIndividualLetterConfig[(int)font].text.lineSpacing;
+			    letterText.alignment = fontsIndividualLetterConfig[(int)font].text.alignment;
+			    letterText.alignByGeometry = fontsIndividualLetterConfig[(int)font].text.alignByGeometry;
+			    letterText.horizontalOverflow = fontsIndividualLetterConfig[(int)font].text.horizontalOverflow;
+			    letterText.verticalOverflow = fontsIndividualLetterConfig[(int)font].text.verticalOverflow;
+			    letterText.color = fontsIndividualLetterConfig[(int)font].text.color;
+			    letterText.material = fontsIndividualLetterConfig[(int)font].text.material;
+			    letterText.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
+			    letterText.text = lineBreaks + word[current].ToString();
+			    //Debug.Log(letter.ToString());
+			    letterText.rectTransform.position = fontsIndividualLetterConfig[(int)font].text.rectTransform.position;
+			    //Debug.Log(text.rectTransform.position);
+			    letterText.rectTransform.rotation = fontsIndividualLetterConfig[(int)font].text.rectTransform.rotation;
+			    letterText.rectTransform.localScale = fontsIndividualLetterConfig[(int)font].text.rectTransform.localScale;
+			    letterText.rectTransform.localPosition = letterText.rectTransform.position + adddeltaPosition;
+			    adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
+
+			    lettersText.Add(letterText);
+                //Debug.Log(adddeltaPosition);
+                //Debug.Log(letterText.rectTransform.anchoredPosition);
+                //Debug.Log(letterText.rectTransform.localPosition);
+                //Debug.Log(adddeltaPosition);
+                //Debug.Log(letterText.rectTransform.localPosition);
+                //letterText.rectTransform.anchoredPosition += new Vector2(adddeltaPosition.x,adddeltaPosition.y);
+            }
+            else
+            {
+                int next = current + 1;
+
+                if(next < word.Length)
+                {
+                    if (word[next] == 'n')
+                    {
+                        adddeltaPosition = new Vector3(0f, adddeltaPosition.y, adddeltaPosition.z);
+                        newLineCounter++;
+                    }
+
+                    current++;
+                }
+
+            }
+            current++;
+        }
 	}
 
 	private void ClearSizeRectTransform()
