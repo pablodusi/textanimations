@@ -34,7 +34,7 @@ public class WordAnimator : MonoBehaviour
 	private Canvas canvas;
 	private float lerp;
     private int fontSizeOld;
-
+    private string oldWord;
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -44,6 +44,9 @@ public class WordAnimator : MonoBehaviour
 
     public delegate void ChangeAnimation(AnimationTypeEnum newAnimation);
     public event ChangeAnimation OnChangeAnimation;
+
+    public delegate void ChangeWord(string newWord);
+    public event ChangeWord OnChangeWord;
 
     public AnimationTypeEnum ÁnimationType
     {
@@ -121,6 +124,7 @@ public class WordAnimator : MonoBehaviour
         }
 
         fontSizeOld = fontSize;
+        oldWord = word;
 
         CreateLetters ();		
 
@@ -138,6 +142,7 @@ public class WordAnimator : MonoBehaviour
         OnFontSizeChange += HandleOnFontSizeChange;
         OnFontChange += HandleOnFontChange;
         OnChangeAnimation += HandleOnChangeAnimation;
+        OnChangeWord += HandleOnChangeWord;
     }
 
     void OnDestroy()
@@ -145,6 +150,7 @@ public class WordAnimator : MonoBehaviour
         OnFontSizeChange -= HandleOnFontSizeChange;
         OnFontChange -= HandleOnFontChange;
         OnChangeAnimation -= HandleOnChangeAnimation;
+        OnChangeWord -= HandleOnChangeWord;
     }
 
     private void HandleOnChangeAnimation(AnimationTypeEnum newAnimation)
@@ -331,6 +337,16 @@ public class WordAnimator : MonoBehaviour
             }
         }
 
+        if(oldWord != word)
+        {
+            oldWord = word;
+
+            if(OnChangeWord != null)
+            {
+                HandleOnChangeWord(word);
+            }
+        }
+
 		if (isPlaying) 
 		{
 			lerp += Time.deltaTime * speed;
@@ -353,6 +369,13 @@ public class WordAnimator : MonoBehaviour
 			}
 		}
 	}
+
+    private void HandleOnChangeWord(string newWord)
+    {
+        Stop();
+        CreateLetters();
+        Play();
+    }
 
     private void SetLettersInvisible()
     {
