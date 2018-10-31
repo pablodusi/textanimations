@@ -16,7 +16,6 @@ public class WordAnimator : MonoBehaviour
 	public AnimationTypeEnum animationType;
 	public int fontSize;
     public Vector3 position;
-    public Vector3 size;
 	public bool startAtBegining;
 	public bool isPlaying;
 	public float speed = 1f;
@@ -37,6 +36,7 @@ public class WordAnimator : MonoBehaviour
 	private float lerp;
     private int fontSizeOld;
     private string oldWord;
+    private Vector3 oldPosition;
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -49,6 +49,9 @@ public class WordAnimator : MonoBehaviour
 
     public delegate void ChangeWord(string newWord);
     public event ChangeWord OnChangeWord;
+
+    public delegate void ChangePosition(Vector3 newPosition);
+    public event ChangePosition OnChangePosition;
 
     public AnimationTypeEnum ÁnimationType
     {
@@ -127,6 +130,7 @@ public class WordAnimator : MonoBehaviour
 
         fontSizeOld = fontSize;
         oldWord = word;
+        oldPosition = position;
 
         CreateLetters ();		
 
@@ -145,6 +149,7 @@ public class WordAnimator : MonoBehaviour
         OnFontChange += HandleOnFontChange;
         OnChangeAnimation += HandleOnChangeAnimation;
         OnChangeWord += HandleOnChangeWord;
+        OnChangePosition += HandleChangePosition;
     }
 
     void OnDestroy()
@@ -153,6 +158,15 @@ public class WordAnimator : MonoBehaviour
         OnFontChange -= HandleOnFontChange;
         OnChangeAnimation -= HandleOnChangeAnimation;
         OnChangeWord -= HandleOnChangeWord;
+        OnChangePosition -= HandleChangePosition;
+    }
+
+    private void HandleChangePosition(Vector3 newPosition)
+    {
+        for (int i = 0; i < lettersText.Count; i++)
+        {
+            lettersText[i].rectTransform.localPosition = position + (i * GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters);
+        }
     }
 
     private void HandleOnChangeAnimation(AnimationTypeEnum newAnimation)
@@ -358,7 +372,17 @@ public class WordAnimator : MonoBehaviour
 
             if(OnChangeWord != null)
             {
-                HandleOnChangeWord(word);
+                OnChangeWord(word);
+            }
+        }
+
+        if(oldPosition != position)
+        {
+            oldPosition = position;
+
+            if(OnChangePosition != null)
+            {
+                OnChangePosition(position);
             }
         }
 
