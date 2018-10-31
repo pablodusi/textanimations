@@ -157,10 +157,7 @@ public class WordAnimator : MonoBehaviour
 
     private void HandleChangePosition(Vector3 newPosition)
     {
-        for (int i = 0; i < lettersText.Count; i++)
-        {
-            lettersText[i].rectTransform.localPosition = position + (i * GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters);
-        }
+        UpdateLetters();
     }
 
     private void HandleOnChangeAnimation(AnimationTypeEnum newAnimation)
