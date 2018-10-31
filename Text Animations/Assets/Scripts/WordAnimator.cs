@@ -19,12 +19,6 @@ public class WordAnimator : MonoBehaviour
 	public bool startAtBegining;
 	public bool isPlaying;
 	public float speed = 1f;
-	public float startRotation = 0f;
-	public float endRotation = 360f;
-	public int startSize = 76;
-	public int endSize = 100;
-	public Color startColor = Color.white;
-	public Color endColor = Color.white;
 	public bool loop = true;
 	public float fontSizeNormalizedPercentDiff;
 	public GameObject letterPrefab;
@@ -183,6 +177,8 @@ public class WordAnimator : MonoBehaviour
     private void HandleOnFontSizeChange(int newValue)
     {
 
+          UpdateLetters();
+            /*
           for(int i = 0; i < lettersText.Count; i++)
           {
             //lettersText[i].rectTransform.localPosition = fontsIndividualLetterConfig[(int)font].text.rectTransform.localPosition + (i * GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters);
@@ -193,12 +189,76 @@ public class WordAnimator : MonoBehaviour
             lettersText[i].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
             lettersText[i].fontSize = newValue;
           }
+          */
 
         //fontsIndividualLetterConfig[(int)font].baseFontSize;
         //fontsIndividualLetterConfig[(int)font].distanceBetweenLetters
         //fontsIndividualLetterConfig[¨(int)font].sizeRectTransformForThisFontSize
 
         //letter.rectTransform.localPosition =    
+    }
+
+    private void EraseLetters()
+    {
+
+    }
+
+    private void UpdateLetters()
+    {
+        if(lettersText != null)
+        {
+            if(canvas != null)
+            {
+                Vector3 adddeltaPosition = Vector3.zero;
+
+                int newLineCounter = 0;
+                int current = 0;
+                int currentLetter = 0;
+
+                while (current < word.Length)
+                {
+                    if (word[current] != '/')
+                    {
+                        string lineBreaks = string.Empty;
+
+                        for (int i = 0; i < newLineCounter; i++)
+                        {
+                            lineBreaks += "\n";
+                        }
+
+                        lettersText[currentLetter].text = lineBreaks + word[current].ToString();
+                        lettersText[currentLetter].rectTransform.position = position;
+                        lettersText[currentLetter].rectTransform.localPosition = lettersText[currentLetter].rectTransform.position + adddeltaPosition;
+                        adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
+                        lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
+                        //lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
+
+                        lettersText[currentLetter].fontSize = fontSize;
+
+                        currentLetter++;
+                    }
+                    else
+                    {
+                            int next = current + 1;
+
+                            if (next < word.Length)
+                            {
+                                if (word[next] == 'n')
+                                {
+                                    adddeltaPosition = new Vector3(0f, adddeltaPosition.y, adddeltaPosition.z);
+                                    newLineCounter++;
+                                }
+
+                                current++;
+                            }
+
+                    }
+
+                    current++;                    
+                }
+
+             }
+        }
     }
 
     public void CreateLetters()
@@ -224,7 +284,6 @@ public class WordAnimator : MonoBehaviour
 		lettersText.Clear ();
 		canvas = (Canvas)GameObject.Instantiate (canvasPrefab, Vector3.zero, Quaternion.identity).GetComponent<Canvas>();
 		
-
         canvas.name = fontsIndividualLetterConfig[(int)font].fontName;
 		
 		Vector3 adddeltaPosition = Vector3.zero;

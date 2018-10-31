@@ -12,6 +12,7 @@
                                                                      If true, it shows nothing.
             - Currently, there's no more than one font.
             - When you change the position while the animation is playing, nothing happens.                  DONE
+            - When you change the font Size if there's a line break, it's not respected.                     DONE
 
 
 
