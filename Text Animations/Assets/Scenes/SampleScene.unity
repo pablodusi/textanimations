@@ -165,7 +165,7 @@ Prefab:
     - target: {fileID: 114003799118908280, guid: ad405154b59bbd24d999e12540aa1c08,
         type: 2}
       propertyPath: speed
-      value: 1.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114003799118908280, guid: ad405154b59bbd24d999e12540aa1c08,
         type: 2}
@@ -176,6 +176,21 @@ Prefab:
         type: 2}
       propertyPath: animationType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114003799118908280, guid: ad405154b59bbd24d999e12540aa1c08,
+        type: 2}
+      propertyPath: min1
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114003799118908280, guid: ad405154b59bbd24d999e12540aa1c08,
+        type: 2}
+      propertyPath: max1
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114003799118908280, guid: ad405154b59bbd24d999e12540aa1c08,
+        type: 2}
+      propertyPath: interval1
+      value: 0.001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad405154b59bbd24d999e12540aa1c08, type: 2}

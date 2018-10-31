@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class Letter : MonoBehaviour
 {
-    private Vector3 localPosition;
+    private Vector3 realPosition;
     private Text _text;
     private RectTransform _rectTransform;
 
@@ -18,19 +18,18 @@ public class Letter : MonoBehaviour
         _rectTransform = GetComponent<RectTransform>();
     }
 
-    public Vector3 LocalPosition
+    public Vector3 RealPosition
     {
         get
         {
-            return localPosition;
+            return realPosition;
         }
 
         set
         {
             if(text != null)
             { 
-                localPosition = value;
-                text.rectTransform.localPosition = localPosition;
+                realPosition = value;
             }
         }
     }

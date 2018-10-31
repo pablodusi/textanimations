@@ -21,11 +21,15 @@ public class WordAnimator : MonoBehaviour
     public bool loop = true;
     public bool setInvisibleWhenStops;
     public float speed = 1f;
-
+    public float interval1;
+    public float min1;
+    public float max1;
+    
 	public float fontSizeNormalizedPercentDiff;
     public List<TextIndividualLetterConfig> fontsIndividualLetterConfig;
     public GameObject letterPrefab;
 	public GameObject canvasPrefab;
+
  
 	private List<Letter> lettersText;
 	private Canvas canvas;
@@ -33,6 +37,7 @@ public class WordAnimator : MonoBehaviour
     private int fontSizeOld;
     private string oldWord;
     private Vector3 oldPosition;
+    private float oldTimeShake;
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -241,6 +246,7 @@ public class WordAnimator : MonoBehaviour
                         lettersText[currentLetter].text.text = lineBreaks + word[current].ToString();
                         lettersText[currentLetter].rectTransform.position = position;
                         lettersText[currentLetter].rectTransform.localPosition = lettersText[currentLetter].rectTransform.position + adddeltaPosition;
+                        lettersText[currentLetter].RealPosition = lettersText[currentLetter].rectTransform.localPosition;
                         adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
                         lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
                         //lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
@@ -324,7 +330,8 @@ public class WordAnimator : MonoBehaviour
 			    letterText.rectTransform.rotation = fontsIndividualLetterConfig[(int)font].text.rectTransform.rotation;
 			    letterText.rectTransform.localScale = fontsIndividualLetterConfig[(int)font].text.rectTransform.localScale;
 			    letterText.rectTransform.localPosition = letterText.rectTransform.position + adddeltaPosition;
-			    adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
+                letterText.RealPosition = letterText.rectTransform.localPosition;
+                adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
 
 			    lettersText.Add(letterText);
                 //Debug.Log(adddeltaPosition);
@@ -384,7 +391,12 @@ public class WordAnimator : MonoBehaviour
 			case AnimationTypeEnum.ANIMATION4:
 				ClearSizeRectTransform();	
 				break;
-			case AnimationTypeEnum.NONE:
+            case AnimationTypeEnum.ANIMATION5:
+                ClearSizeRectTransform();
+                oldTimeShake = Time.time;
+                break;
+
+            case AnimationTypeEnum.NONE:
 				break;
 		}
 	}
@@ -445,7 +457,7 @@ public class WordAnimator : MonoBehaviour
 		if (isPlaying) 
 		{
 			lerp += Time.deltaTime * speed;
-
+            
 			if(lerp < 1f)
 			{
 				PlayFrame();
@@ -504,7 +516,10 @@ public class WordAnimator : MonoBehaviour
 			case AnimationTypeEnum.ANIMATION4:
 				Animation4();
 				break;
-			case AnimationTypeEnum.NONE:
+            case AnimationTypeEnum.ANIMATION5:
+                Animation5();
+                break;
+            case AnimationTypeEnum.NONE:
 				break;
 		}
 	}
@@ -556,10 +571,27 @@ public class WordAnimator : MonoBehaviour
         // Shake
 
         // Shake it up down, left and right
+        // Shake with random movements from center position
+        // Uses min1 and max1
 
-        foreach(Letter letter in lettersText)
-        {
-            
-        }
+            if(Time.time >= oldTimeShake + interval1)
+            {
+                oldTimeShake = Time.time;
+                foreach (Letter letter in lettersText)
+                {
+                    letter.rectTransform.localPosition = letter.RealPosition + new Vector3(GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize, Random.Range(min1, max1)), GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize, Random.Range(min1, max1)), 0f);
+                }
+            }
+
+    }
+
+    private float GetValueByPercentage(float value,float normalizedPercent)
+    {
+        return value * normalizedPercent;
+    }
+
+    private float GetValueByFontSize(float baseFontSize,float fontSize,float value)
+    {
+        return (GetValueByPercentage(value,GetNormalizedPercentage(baseFontSize, fontSize) * value));
     }
 }
