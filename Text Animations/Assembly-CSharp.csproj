@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\AnimationTypeEnum.cs" />
     <Compile Include="Assets\Scripts\Documentation.cs" />
     <Compile Include="Assets\Scripts\FontsEnum.cs" />
+    <Compile Include="Assets\Scripts\Letter.cs" />
     <Compile Include="Assets\Scripts\TextIndividualLetterConfig.cs" />
     <Compile Include="Assets\Scripts\WordAnimator.cs" />
     <Reference Include="UnityEditor.StandardEvents">

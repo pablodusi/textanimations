@@ -14,6 +14,9 @@
             - When you change the position while the animation is playing, nothing happens.                  DONE
             - When you change the font Size if there's a line break, it's not respected.                     DONE
             - When you change the position, if there's a line break, it's not respected                      DONE
+    
+    Tasks
+        - New class "Letter" to access the GameObject "Letter"                                               DONE
 
 
 

@@ -19,16 +19,15 @@ public class WordAnimator : MonoBehaviour
 	public bool startAtBegining;
 	public bool isPlaying;
     public bool loop = true;
+    public bool setInvisibleWhenStops;
     public float speed = 1f;
 
 	public float fontSizeNormalizedPercentDiff;
-    public bool setInvisibleWhenStops;
     public List<TextIndividualLetterConfig> fontsIndividualLetterConfig;
     public GameObject letterPrefab;
 	public GameObject canvasPrefab;
-    public Text textTest;
-
-	private List<Text> lettersText;
+ 
+	private List<Letter> lettersText;
 	private Canvas canvas;
 	private float lerp;
     private int fontSizeOld;
@@ -136,8 +135,6 @@ public class WordAnimator : MonoBehaviour
 			Play ();
 		}
 
-        //textTest.text = "PROBANDO\nPROBANDO";
-
     }
 
     void Start()
@@ -202,7 +199,7 @@ public class WordAnimator : MonoBehaviour
     {
         if (lettersText != null)
         {
-            foreach (Text letter in lettersText)
+            foreach (Letter letter in lettersText)
             {
                 Destroy(letter.gameObject);
             }
@@ -241,14 +238,14 @@ public class WordAnimator : MonoBehaviour
                             lineBreaks += "\n";
                         }
 
-                        lettersText[currentLetter].text = lineBreaks + word[current].ToString();
+                        lettersText[currentLetter].text.text = lineBreaks + word[current].ToString();
                         lettersText[currentLetter].rectTransform.position = position;
                         lettersText[currentLetter].rectTransform.localPosition = lettersText[currentLetter].rectTransform.position + adddeltaPosition;
                         adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
                         lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
                         //lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
 
-                        lettersText[currentLetter].fontSize = fontSize;
+                        lettersText[currentLetter].text.fontSize = fontSize;
 
                         currentLetter++;
                     }
@@ -280,7 +277,7 @@ public class WordAnimator : MonoBehaviour
 	{
         EraseLetters();
 		
-		lettersText = new List<Text> ();
+		lettersText = new List<Letter> ();
 		lettersText.Clear ();
 		canvas = (Canvas)GameObject.Instantiate (canvasPrefab, Vector3.zero, Quaternion.identity).GetComponent<Canvas>();
 		
@@ -303,24 +300,24 @@ public class WordAnimator : MonoBehaviour
                     lineBreaks += "\n";
                 }
 
-                Text letterText = (Text)GameObject.Instantiate(letterPrefab,Vector3.zero,Quaternion.identity).GetComponent<Text>();
+                Letter letterText = (Letter)GameObject.Instantiate(letterPrefab,Vector3.zero,Quaternion.identity).GetComponent<Letter>();
 			    letterText.transform.name = "Letter";
 			    letterText.transform.SetParent(canvas.gameObject.transform);
 
-                letterText.font = fontsIndividualLetterConfig[(int)font].text.font;
-                letterText.fontStyle = fontsIndividualLetterConfig[(int)font].text.fontStyle;
-			    letterText.fontSize = fontSize;
+                letterText.text.font = fontsIndividualLetterConfig[(int)font].text.font;
+                letterText.text.fontStyle = fontsIndividualLetterConfig[(int)font].text.fontStyle;
+			    letterText.text.fontSize = fontSize;
 			    letterText.rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x,GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
 
-			    letterText.lineSpacing = fontsIndividualLetterConfig[(int)font].text.lineSpacing;
-			    letterText.alignment = fontsIndividualLetterConfig[(int)font].text.alignment;
-			    letterText.alignByGeometry = fontsIndividualLetterConfig[(int)font].text.alignByGeometry;
-			    letterText.horizontalOverflow = fontsIndividualLetterConfig[(int)font].text.horizontalOverflow;
-			    letterText.verticalOverflow = fontsIndividualLetterConfig[(int)font].text.verticalOverflow;
-			    letterText.color = fontsIndividualLetterConfig[(int)font].text.color;
-			    letterText.material = fontsIndividualLetterConfig[(int)font].text.material;
-			    letterText.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
-			    letterText.text = lineBreaks + word[current].ToString();
+			    letterText.text.lineSpacing = fontsIndividualLetterConfig[(int)font].text.lineSpacing;
+			    letterText.text.alignment = fontsIndividualLetterConfig[(int)font].text.alignment;
+			    letterText.text.alignByGeometry = fontsIndividualLetterConfig[(int)font].text.alignByGeometry;
+			    letterText.text.horizontalOverflow = fontsIndividualLetterConfig[(int)font].text.horizontalOverflow;
+			    letterText.text.verticalOverflow = fontsIndividualLetterConfig[(int)font].text.verticalOverflow;
+			    letterText.text.color = fontsIndividualLetterConfig[(int)font].text.color;
+			    letterText.text.material = fontsIndividualLetterConfig[(int)font].text.material;
+			    letterText.text.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
+			    letterText.text.text = lineBreaks + word[current].ToString();
 			    //Debug.Log(letter.ToString());
 			    letterText.rectTransform.position = position;
 			    //Debug.Log(text.rectTransform.position);
@@ -359,9 +356,9 @@ public class WordAnimator : MonoBehaviour
 
 	private void ClearSizeRectTransform()
 	{
-		foreach (Text text in lettersText) 
+		foreach (Letter letter in lettersText) 
 		{
-			text.rectTransform.sizeDelta = new Vector2(512f,512f);	
+			letter.rectTransform.sizeDelta = new Vector2(512f,512f);	
 		}
 	}
 
@@ -477,17 +474,17 @@ public class WordAnimator : MonoBehaviour
 
     private void SetLettersInvisible()
     {
-        foreach (Text letterText in lettersText)
+        foreach (Letter letterText in lettersText)
         {
-            letterText.color = new Color(letterText.color.r,letterText.color.g,letterText.color.b,0f);
+            letterText.text.color = new Color(letterText.text.color.r,letterText.text.color.g,letterText.text.color.b,0f);
         }
     }
 
     private void SetLettersVisible()
     {
-        foreach (Text letterText in lettersText)
+        foreach (Letter letterText in lettersText)
         {
-            letterText.color = new Color(letterText.color.r, letterText.color.g, letterText.color.b, 1f);
+            letterText.text.color = new Color(letterText.text.color.r, letterText.text.color.g, letterText.text.color.b, 1f);
         }
     }
 
@@ -514,11 +511,11 @@ public class WordAnimator : MonoBehaviour
 
 	private void Animation1()
 	{
-		foreach (Text t in lettersText) 
+		foreach (Letter letter in lettersText) 
 		{
             //t.fontSize = ((int)Mathf.Lerp((float)fontsIndividualLetterConfig[(int)font].text.fontSize,(float)fontsIndividualLetterConfig[(int)font].text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
-            t.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
-            t.color = new Color(t.color.r,t.color.g,fontsIndividualLetterConfig[(int)font].text.color.b,Mathf.Lerp(1f,0f,lerp));
+            letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
+            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,fontsIndividualLetterConfig[(int)font].text.color.b,Mathf.Lerp(1f,0f,lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
 
@@ -527,10 +524,10 @@ public class WordAnimator : MonoBehaviour
 
 	private void Animation2()
 	{
-		foreach (Text t in lettersText) 
+		foreach (Letter letter in lettersText) 
 		{
-			t.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
-			t.color = new Color(t.color.r,t.color.g,fontsIndividualLetterConfig[(int)font].text.color.b,Mathf.Lerp(1f,0f,lerp));
+            letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
+            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,fontsIndividualLetterConfig[(int)font].text.color.b,Mathf.Lerp(1f,0f,lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
 
@@ -538,19 +535,31 @@ public class WordAnimator : MonoBehaviour
 
 	private void Animation3()
 	{
-		foreach (Text t in lettersText)
+		foreach (Letter letter in lettersText)
 		{
-			t.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
-			t.color = new Color(t.color.r,t.color.g,t.color.b,Mathf.Lerp(0f,1f,lerp));
+            letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
+            letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b,Mathf.Lerp(0f,1f,lerp));
 		}
 	}
 
 	private void Animation4()
 	{
-		foreach (Text t in lettersText)
+		foreach (Letter letter in lettersText)
 		{
-			t.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
-			t.color = new Color(t.color.r,t.color.g,t.color.b,Mathf.Lerp(0f,1f,lerp));
+            letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
+            letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b,Mathf.Lerp(0f,1f,lerp));
 		}
 	}
+
+    private void Animation5()
+    {
+        // Shake
+
+        // Shake it up down, left and right
+
+        foreach(Letter letter in lettersText)
+        {
+            
+        }
+    }
 }
