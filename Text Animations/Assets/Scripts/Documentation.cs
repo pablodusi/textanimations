@@ -7,7 +7,6 @@
             - The position behaves weird when you change the font size repeteadly in the animation 2 and 4.  DONE
             - If you change the font size repeteadly it is not reflected on the animations                   DONE
             - When you change the Word property, nothing happens. The word have to be reconstructed.         DONE
-            - The GameObject letters always have the same size. It has to be configurable.
             - The GameObject letters always are in the same position. It has to be configurable.             DONE
             - SetInvisible boolean property when the animation ends. If false, it shows the first frame
                                                                      If true, it shows nothing.

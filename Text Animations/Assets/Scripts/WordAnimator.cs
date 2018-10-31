@@ -16,6 +16,7 @@ public class WordAnimator : MonoBehaviour
 	public AnimationTypeEnum animationType;
 	public int fontSize;
     public Vector3 position;
+    public Vector3 size;
 	public bool startAtBegining;
 	public bool isPlaying;
 	public float speed = 1f;
@@ -30,7 +31,7 @@ public class WordAnimator : MonoBehaviour
 	public GameObject letterPrefab;
 	public GameObject canvasPrefab;
     public Text textTest;
-
+    public bool setInvisibleWhenStops;
 	private List<Text> lettersText;
 	private Canvas canvas;
 	private float lerp;
@@ -176,7 +177,7 @@ public class WordAnimator : MonoBehaviour
 
             //  ATTENTION: The sizeDelta has to be set on the font letter prefab with the exact amount it's setted in the WordAnimator script. Otherwise, it will be errors.
             lettersText[i].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
-                lettersText[i].fontSize = newValue;
+            lettersText[i].fontSize = newValue;
           }
 
         //fontsIndividualLetterConfig[(int)font].baseFontSize;
@@ -325,9 +326,19 @@ public class WordAnimator : MonoBehaviour
 
 	public void Stop()
 	{
-		isPlaying = false;
-		lerp = 0f;
-	}
+        if(setInvisibleWhenStops)
+        {
+            SetLettersInvisible();
+        }
+        else
+        {
+            lerp = 1f;
+            PlayFrame();
+        }
+
+        isPlaying = false;
+        lerp = 0f;
+    }
 
 	void Update()
 	{
@@ -368,7 +379,7 @@ public class WordAnimator : MonoBehaviour
 				else
 				{
 					Stop();
-                    SetLettersInvisible();
+                    //SetLettersInvisible();
 				}
 			}
 		}
