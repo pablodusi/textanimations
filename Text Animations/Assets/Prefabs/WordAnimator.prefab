@@ -56,18 +56,16 @@ MonoBehaviour:
   - {fileID: 114779054392031916, guid: a38c748f4a93d104e8aaeccb6b24867c, type: 2}
   font: 0
   animationType: 1
+  fontSize: 120
+  position: {x: -200, y: 0, z: 0}
   startAtBegining: 1
   isPlaying: 0
-  speed: 2
-  startRotation: 0
-  endRotation: 360
-  startSize: 76
-  endSize: 120
-  startColor: {r: 1, g: 1, b: 1, a: 1}
-  endColor: {r: 1, g: 1, b: 1, a: 1}
+  speed: 1
   loop: 1
   fontSizeNormalizedPercentDiff: 0.4
   letterPrefab: {fileID: 1537832372690732, guid: 791ef5e5fa7a46a42b1fec247c4788f4,
     type: 2}
   canvasPrefab: {fileID: 1207652338797410, guid: 25926c1a404405147a167cced21f452d,
     type: 2}
+  textTest: {fileID: 0}
+  setInvisibleWhenStops: 0

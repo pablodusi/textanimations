@@ -11,20 +11,23 @@ using System.Collections.Generic;
 public class WordAnimator : MonoBehaviour 
 {
 	public string word;
-	public List<TextIndividualLetterConfig> fontsIndividualLetterConfig;
+
 	public FontsEnum font;
 	public AnimationTypeEnum animationType;
 	public int fontSize;
     public Vector3 position;
 	public bool startAtBegining;
 	public bool isPlaying;
-	public float speed = 1f;
-	public bool loop = true;
+    public bool loop = true;
+    public float speed = 1f;
+
 	public float fontSizeNormalizedPercentDiff;
-	public GameObject letterPrefab;
+    public bool setInvisibleWhenStops;
+    public List<TextIndividualLetterConfig> fontsIndividualLetterConfig;
+    public GameObject letterPrefab;
 	public GameObject canvasPrefab;
     public Text textTest;
-    public bool setInvisibleWhenStops;
+
 	private List<Text> lettersText;
 	private Canvas canvas;
 	private float lerp;
@@ -195,9 +198,24 @@ public class WordAnimator : MonoBehaviour
         //letter.rectTransform.localPosition =    
     }
 
-    private void EraseLetters()
+    public void EraseLetters()
     {
+        if (lettersText != null)
+        {
+            foreach (Text letter in lettersText)
+            {
+                Destroy(letter.gameObject);
+            }
 
+            lettersText.Clear();
+        }
+
+
+        if (canvas != null)
+        {
+            Destroy(canvas.gameObject);
+            canvas = null;
+        }
     }
 
     private void UpdateLetters()
@@ -260,22 +278,7 @@ public class WordAnimator : MonoBehaviour
 
     public void CreateLetters()
 	{
-		if (lettersText != null) 
-		{
-			foreach (Text letter in lettersText)
-			{
-				Destroy(letter.gameObject);
-			}
-
-			lettersText.Clear ();
-		}
-		
-
-		if (canvas != null)
-		{
-			Destroy (canvas.gameObject);
-			canvas = null;
-		}
+        EraseLetters();
 		
 		lettersText = new List<Text> ();
 		lettersText.Clear ();
