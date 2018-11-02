@@ -15,10 +15,13 @@
             - When you change the font Size if there's a line break, it's not respected.                     DONE
             - When you change the position, if there's a line break, it's not respected                      DONE
             - When you pass from "Shake" animation to other animation, the letters are misplaced
+            - There are animations that have to use textColor property
+            - When heart beat animation plays, the first or last frame don't uses the real alpha
     
     Tasks
         - New class "Letter" to access the GameObject "Letter"                                               DONE
-        - New animation: "Heart Beat"
+        - New animation: "Heart Beat"                                                                        DONE
+        - New Animation: "Heart Beat Without Alpha"
         - Pause time between instance of animations
 
 

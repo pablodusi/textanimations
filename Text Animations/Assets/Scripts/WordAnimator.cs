@@ -24,7 +24,7 @@ public class WordAnimator : MonoBehaviour
     public float interval1;
     public float min1;
     public float max1;
-    
+    public Color textColor;
 	public float fontSizeNormalizedPercentDiff;
     public List<TextIndividualLetterConfig> fontsIndividualLetterConfig;
     public GameObject letterPrefab;
@@ -400,6 +400,10 @@ public class WordAnimator : MonoBehaviour
             case AnimationTypeEnum.ANIMATION6:
                 ClearSizeRectTransform();
                 break;
+            case AnimationTypeEnum.ANIMATION7:
+                ClearSizeRectTransform();
+                break;
+
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -424,6 +428,7 @@ public class WordAnimator : MonoBehaviour
 
         isPlaying = false;
         lerp = 0f;
+        isPlayingForward = true;
     }
 
 	void Update()
@@ -527,6 +532,9 @@ public class WordAnimator : MonoBehaviour
             case AnimationTypeEnum.ANIMATION6:
                 Animation6();
                 break;
+            case AnimationTypeEnum.ANIMATION7:
+                Animation7();
+                break;
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -592,7 +600,6 @@ public class WordAnimator : MonoBehaviour
             }
 
     }
-
     
     private void Animation6()
     {
@@ -611,6 +618,27 @@ public class WordAnimator : MonoBehaviour
             {
                 letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
                 letter.text.color = new Color(letter.text.color.r, letter.text.color.g, fontsIndividualLetterConfig[(int)font].text.color.b, Mathf.Lerp(1f, 0f, lerp));
+            }
+        }
+    }
+
+    private void Animation7()
+    {
+        // Heart Beat Without Alpha Animation
+
+        // INPUT: StartSize, EndSize
+
+        foreach (Letter letter in lettersText)
+        {
+            if (isPlayingForward)
+            {
+                letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
+                letter.text.color = textColor;
+            }
+            else
+            {
+                letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
+                letter.text.color = textColor;
             }
         }
     }
