@@ -22,6 +22,7 @@ public class WordAnimator : MonoBehaviour
     public bool setInvisibleWhenStops;
     public float speed = 1f;
     public float interval1;
+    public float intervalBetweenAnimations = 1f;
     public float min1;
     public float max1;
     public Color textColor;
@@ -39,6 +40,7 @@ public class WordAnimator : MonoBehaviour
     private Vector3 oldPosition;
     private float oldTimeShake;
     private bool isPlayingForward;          // False is reverse
+    private float timeLastAnimation;        // The time when the last animation stopped
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -134,6 +136,7 @@ public class WordAnimator : MonoBehaviour
         oldWord = word;
         oldPosition = position;
         isPlayingForward = true;
+        timeLastAnimation = Time.time;
 
         CreateLetters ();		
 
@@ -377,7 +380,7 @@ public class WordAnimator : MonoBehaviour
 		isPlaying = true;
 		lerp = 0f;
 
-        SetLettersVisible();
+        SetLettersInvisible();
 
 		switch (animationType) 
 		{
@@ -465,26 +468,31 @@ public class WordAnimator : MonoBehaviour
 
 		if (isPlaying) 
 		{
-			lerp += Time.deltaTime * speed;
+            if(Time.time >= timeLastAnimation + intervalBetweenAnimations)
+            { 
+			    lerp += Time.deltaTime * speed;
             
-			if(lerp < 1f)
-			{
-				PlayFrame();
-			}
-			else
-			{
-                isPlayingForward = !isPlayingForward;
-				if(loop)
-				{
-					Play();
-				}
-				else
-				{
-					Stop();
-                    //SetLettersInvisible();
-				}
-			}
-		}
+			    if(lerp < 1f)
+			    {
+				    PlayFrame();
+			    }
+			    else
+			    {
+                    isPlayingForward = !isPlayingForward;
+                    timeLastAnimation = Time.time;
+                    
+				    if(loop)
+				    {
+					    Play();
+				    }
+				    else
+				    {
+					    Stop();
+                        //SetLettersInvisible();
+				    }
+			    }
+            }
+        }
 	}
 
     private void HandleOnChangeWord(string newWord)
@@ -512,6 +520,7 @@ public class WordAnimator : MonoBehaviour
 
 	private void PlayFrame()
 	{
+        SetLettersVisible();
 		switch (animationType) 
 		{
 			case AnimationTypeEnum.ANIMATION1:
