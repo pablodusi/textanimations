@@ -11,7 +11,6 @@ using System.Collections.Generic;
 public class WordAnimator : MonoBehaviour 
 {
 	public string word;
-
 	public FontsEnum font;
 	public AnimationTypeEnum animationType;
 	public int fontSize;
@@ -41,6 +40,7 @@ public class WordAnimator : MonoBehaviour
     private float oldTimeShake;
     private bool isPlayingForward;          // False is reverse
     private float timeLastAnimation;        // The time when the last animation stopped
+    private AnimationTypeEnum oldAnimation;
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -135,6 +135,8 @@ public class WordAnimator : MonoBehaviour
         fontSizeOld = fontSize;
         oldWord = word;
         oldPosition = position;
+        oldAnimation = animationType;
+
         isPlayingForward = true;
         timeLastAnimation = Time.time;
 
@@ -173,6 +175,8 @@ public class WordAnimator : MonoBehaviour
     private void HandleOnChangeAnimation(AnimationTypeEnum newAnimation)
     {
         Stop();
+        //Debug.Log("HandleOnChangeAnimation");
+        UpdateLetters();
         Play();
     }
 
@@ -183,7 +187,6 @@ public class WordAnimator : MonoBehaviour
 
     private void HandleOnFontSizeChange(int newValue)
     {
-
           UpdateLetters();
             /*
           for(int i = 0; i < lettersText.Count; i++)
@@ -256,6 +259,7 @@ public class WordAnimator : MonoBehaviour
                         lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
                         //lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
 
+                        //Debug.Log("UpdateLetters " + lettersText[currentLetter].text.text.ToString());
                         lettersText[currentLetter].text.fontSize = fontSize;
 
                         currentLetter++;
@@ -463,6 +467,16 @@ public class WordAnimator : MonoBehaviour
             if(OnChangePosition != null)
             {
                 OnChangePosition(position);
+            }
+        }
+
+        if(oldAnimation != animationType)
+        {
+            oldAnimation = animationType;
+
+            if(OnChangeAnimation != null)
+            {
+                OnChangeAnimation(animationType);
             }
         }
 

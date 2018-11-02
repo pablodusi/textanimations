@@ -14,7 +14,7 @@
             - When you change the position while the animation is playing, nothing happens.                  DONE
             - When you change the font Size if there's a line break, it's not respected.                     DONE
             - When you change the position, if there's a line break, it's not respected                      DONE
-            - When you pass from "Shake" animation to other animation, the letters are misplaced
+            - When you pass from "Shake" animation to other animation, the letters are misplaced             DONE
             - There are animations that have to use textColor property
             - When heart beat animation plays, the first or last frame don't uses the real alpha
                 NOTE: Search for SetLettersVisible
