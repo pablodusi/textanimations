@@ -38,6 +38,7 @@ public class WordAnimator : MonoBehaviour
     private string oldWord;
     private Vector3 oldPosition;
     private float oldTimeShake;
+    private bool isPlayingForward;          // False is reverse
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -132,6 +133,7 @@ public class WordAnimator : MonoBehaviour
         fontSizeOld = fontSize;
         oldWord = word;
         oldPosition = position;
+        isPlayingForward = true;
 
         CreateLetters ();		
 
@@ -395,7 +397,9 @@ public class WordAnimator : MonoBehaviour
                 ClearSizeRectTransform();
                 oldTimeShake = Time.time;
                 break;
-
+            case AnimationTypeEnum.ANIMATION6:
+                ClearSizeRectTransform();
+                break;
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -464,6 +468,7 @@ public class WordAnimator : MonoBehaviour
 			}
 			else
 			{
+                isPlayingForward = !isPlayingForward;
 				if(loop)
 				{
 					Play();
@@ -518,6 +523,9 @@ public class WordAnimator : MonoBehaviour
 				break;
             case AnimationTypeEnum.ANIMATION5:
                 Animation5();
+                break;
+            case AnimationTypeEnum.ANIMATION6:
+                Animation6();
                 break;
             case AnimationTypeEnum.NONE:
 				break;
@@ -583,6 +591,28 @@ public class WordAnimator : MonoBehaviour
                 }
             }
 
+    }
+
+    
+    private void Animation6()
+    {
+        // Heart Beat Animation
+
+        // INPUT: StartSize, EndSize
+        
+        foreach  (Letter letter in lettersText)
+        {
+            if(isPlayingForward)
+            {
+                letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
+                letter.text.color = new Color(letter.text.color.r, letter.text.color.g, fontsIndividualLetterConfig[(int)font].text.color.b, Mathf.Lerp(1f, 0f, lerp));
+            }
+            else
+            {
+                letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
+                letter.text.color = new Color(letter.text.color.r, letter.text.color.g, fontsIndividualLetterConfig[(int)font].text.color.b, Mathf.Lerp(1f, 0f, lerp));
+            }
+        }
     }
 
     private float GetValueByPercentage(float value,float normalizedPercent)
