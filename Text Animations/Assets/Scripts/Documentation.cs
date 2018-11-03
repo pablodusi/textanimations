@@ -25,10 +25,11 @@
         - New animation: "Heart Beat"                                                                        DONE
         - New Animation: "Heart Beat Without Alpha"                                                          DONE
         - Pause time between instance of animations                                                          DONE
-        - Include Text component into WordAnimator component and extract properties from there
+        - Include Text component into WordAnimator component and extract properties from there               DONE
             - Replace Word property for text.text property                                                   DONE
             - Replace fontSize property for text.fontSize property                                           DONE
             - Replace WordAnimator.position for WordAnimator.rectTransform.localPosition                     DONE
-
+            - Replaced WordAnimator.textColor to WordAnimator.text.color                                     DONE
+        - Constantly update Text and Rect Transforms components constantly                                   DONE
 
  */ 

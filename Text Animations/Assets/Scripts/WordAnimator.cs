@@ -40,6 +40,7 @@ public class WordAnimator : MonoBehaviour
     private Vector3 oldPosition;
     private float oldTimeShake;
     private Color oldColor;
+    private Material oldMaterial;
     private bool isPlayingForward;          // False is reverse
     private float timeLastAnimation;        // The time when the last animation stopped
     private AnimationTypeEnum oldAnimation;
@@ -61,6 +62,9 @@ public class WordAnimator : MonoBehaviour
 
     public delegate void ChangeTextColor(Color newColor);
     public event ChangeTextColor OnChangeTextColor;
+
+    public delegate void ChangeMaterial(Material newMaterial);
+    public event ChangeMaterial OnChangeMaterial;
 
     public AnimationTypeEnum ÁnimationType
     {
@@ -144,6 +148,7 @@ public class WordAnimator : MonoBehaviour
         oldText = text.text;
         oldPosition = rectTransform.localPosition;
         oldAnimation = animationType;
+        oldMaterial = text.material;
 
         isPlayingForward = true;
         timeLastAnimation = Time.time;
@@ -164,6 +169,7 @@ public class WordAnimator : MonoBehaviour
         OnChangeText += HandleOnChangeText;
         OnChangePosition += HandleChangePosition;
         OnChangeTextColor += HandleChangeTextColor;
+        OnChangeMaterial += HandleOnChangeMaterial;
     }
 
     void OnDestroy()
@@ -174,6 +180,7 @@ public class WordAnimator : MonoBehaviour
         OnChangeText -= HandleOnChangeText;
         OnChangePosition -= HandleChangePosition;
         OnChangeTextColor -= HandleChangeTextColor;
+        OnChangeMaterial -= HandleOnChangeMaterial;
     }
 
     private void HandleChangeTextColor(Color newColor)
@@ -337,24 +344,24 @@ public class WordAnimator : MonoBehaviour
 			    letterText.transform.SetParent(canvas.gameObject.transform);
 
                 letterText.text.font = fontsIndividualLetterConfig[(int)font].text.font;
-                letterText.text.fontStyle = fontsIndividualLetterConfig[(int)font].text.fontStyle;
+                letterText.text.fontStyle = text.fontStyle;
 			    letterText.text.fontSize = text.fontSize;
 			    letterText.rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x,GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
 
-			    letterText.text.lineSpacing = fontsIndividualLetterConfig[(int)font].text.lineSpacing;
-			    letterText.text.alignment = fontsIndividualLetterConfig[(int)font].text.alignment;
-			    letterText.text.alignByGeometry = fontsIndividualLetterConfig[(int)font].text.alignByGeometry;
-			    letterText.text.horizontalOverflow = fontsIndividualLetterConfig[(int)font].text.horizontalOverflow;
-			    letterText.text.verticalOverflow = fontsIndividualLetterConfig[(int)font].text.verticalOverflow;
+			    letterText.text.lineSpacing = text.lineSpacing;
+			    letterText.text.alignment = text.alignment;
+			    letterText.text.alignByGeometry = text.alignByGeometry;
+			    letterText.text.horizontalOverflow = text.horizontalOverflow;
+			    letterText.text.verticalOverflow = text.verticalOverflow;
 			    letterText.text.color = text.color;
-			    letterText.text.material = fontsIndividualLetterConfig[(int)font].text.material;
-			    letterText.text.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
+			    letterText.text.material = text.material;
+			    letterText.text.raycastTarget = text.raycastTarget;
 			    letterText.text.text = lineBreaks + text.text[current].ToString();
 			    //Debug.Log(letter.ToString());
 			    letterText.rectTransform.position = rectTransform.localPosition;
 			    //Debug.Log(text.rectTransform.position);
-			    letterText.rectTransform.rotation = fontsIndividualLetterConfig[(int)font].text.rectTransform.rotation;
-			    letterText.rectTransform.localScale = fontsIndividualLetterConfig[(int)font].text.rectTransform.localScale;
+			    letterText.rectTransform.rotation = rectTransform.rotation;
+			    letterText.rectTransform.localScale = rectTransform.localScale;
 			    letterText.rectTransform.localPosition = letterText.rectTransform.position + adddeltaPosition;
                 letterText.RealPosition = letterText.rectTransform.localPosition;
                 adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
@@ -455,6 +462,34 @@ public class WordAnimator : MonoBehaviour
         isPlayingForward = true;
     }
 
+    private void UpdateLettersEveryFrame()
+    {
+        foreach(Letter letter in lettersText)
+        {
+            letter.text.fontStyle = text.fontStyle;
+            letter.text.lineSpacing = text.lineSpacing;
+            letter.text.supportRichText = text.supportRichText;
+            letter.text.alignment = text.alignment;
+            letter.text.alignByGeometry = text.alignByGeometry;
+            letter.text.horizontalOverflow = text.horizontalOverflow;
+            letter.text.resizeTextForBestFit = text.resizeTextForBestFit;
+            letter.text.raycastTarget = text.raycastTarget;
+
+            letter.rectTransform.anchorMin = rectTransform.anchorMin;
+            letter.rectTransform.anchorMax = rectTransform.anchorMax;
+            letter.rectTransform.pivot = rectTransform.pivot;
+            letter.rectTransform.localScale = rectTransform.localScale;
+        }
+    }
+
+    private void HandleOnChangeMaterial(Material newMaterial)
+    {
+        foreach(Letter letter in lettersText)
+        {
+            letter.text.material = newMaterial;
+        }
+    }
+
 	void Update()
 	{
         if(fontSizeOld != text.fontSize)
@@ -506,6 +541,19 @@ public class WordAnimator : MonoBehaviour
                 OnChangeTextColor(text.color);
             }
         }
+
+        if(oldMaterial != text.material)
+        {
+            oldMaterial = text.material;
+
+            if(OnChangeMaterial != null)
+            {
+                OnChangeMaterial(text.material);
+            }
+        }
+
+        UpdateLettersEveryFrame();
+
 
 		if (isPlaying) 
 		{
