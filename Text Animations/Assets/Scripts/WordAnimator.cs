@@ -24,7 +24,7 @@ public class WordAnimator : MonoBehaviour
     public float intervalBetweenAnimations = 1f;
     public float min1;
     public float max1;
-    public Color textColor;                             //
+    //public Color textColor;                             //
 	public float fontSizeNormalizedPercentDiff;
     public List<TextIndividualLetterConfig> fontsIndividualLetterConfig;
     public GameObject letterPrefab;
@@ -346,7 +346,7 @@ public class WordAnimator : MonoBehaviour
 			    letterText.text.alignByGeometry = fontsIndividualLetterConfig[(int)font].text.alignByGeometry;
 			    letterText.text.horizontalOverflow = fontsIndividualLetterConfig[(int)font].text.horizontalOverflow;
 			    letterText.text.verticalOverflow = fontsIndividualLetterConfig[(int)font].text.verticalOverflow;
-			    letterText.text.color = textColor;
+			    letterText.text.color = text.color;
 			    letterText.text.material = fontsIndividualLetterConfig[(int)font].text.material;
 			    letterText.text.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
 			    letterText.text.text = lineBreaks + text.text[current].ToString();
@@ -497,13 +497,13 @@ public class WordAnimator : MonoBehaviour
             }
         }
 
-        if(oldColor != textColor)
+        if(oldColor != text.color)
         {
-            oldColor = textColor;
+            oldColor = text.color;
 
             if(OnChangeTextColor != null)
             {
-                OnChangeTextColor(textColor);
+                OnChangeTextColor(text.color);
             }
         }
 
@@ -683,12 +683,12 @@ public class WordAnimator : MonoBehaviour
             if (isPlayingForward)
             {
                 letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
-                letter.text.color = textColor;
+                letter.text.color = text.color;
             }
             else
             {
                 letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
-                letter.text.color = textColor;
+                letter.text.color = text.color;
             }
         }
     }
