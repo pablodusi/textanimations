@@ -30,7 +30,7 @@ public class WordAnimator : MonoBehaviour
     public GameObject letterPrefab;
 	public GameObject canvasPrefab;
 
- 
+    private Text test;
 	private List<Letter> lettersText;
 	private Canvas canvas;
 	private float lerp;
@@ -38,6 +38,7 @@ public class WordAnimator : MonoBehaviour
     private string oldWord;
     private Vector3 oldPosition;
     private float oldTimeShake;
+    private Color oldColor;
     private bool isPlayingForward;          // False is reverse
     private float timeLastAnimation;        // The time when the last animation stopped
     private AnimationTypeEnum oldAnimation;
@@ -56,6 +57,9 @@ public class WordAnimator : MonoBehaviour
 
     public delegate void ChangePosition(Vector3 newPosition);
     public event ChangePosition OnChangePosition;
+
+    public delegate void ChangeTextColor(Color newColor);
+    public event ChangeTextColor OnChangeTextColor;
 
     public AnimationTypeEnum ÁnimationType
     {
@@ -146,7 +150,6 @@ public class WordAnimator : MonoBehaviour
 		{
 			Play ();
 		}
-
     }
 
     void Start()
@@ -156,6 +159,7 @@ public class WordAnimator : MonoBehaviour
         OnChangeAnimation += HandleOnChangeAnimation;
         OnChangeWord += HandleOnChangeWord;
         OnChangePosition += HandleChangePosition;
+        OnChangeTextColor += HandleChangeTextColor;
     }
 
     void OnDestroy()
@@ -165,6 +169,15 @@ public class WordAnimator : MonoBehaviour
         OnChangeAnimation -= HandleOnChangeAnimation;
         OnChangeWord -= HandleOnChangeWord;
         OnChangePosition -= HandleChangePosition;
+        OnChangeTextColor -= HandleChangeTextColor;
+    }
+
+    private void HandleChangeTextColor(Color newColor)
+    {
+        foreach(Letter letter in lettersText)
+        {
+            letter.text.color = newColor;
+        }
     }
 
     private void HandleChangePosition(Vector3 newPosition)
@@ -329,7 +342,7 @@ public class WordAnimator : MonoBehaviour
 			    letterText.text.alignByGeometry = fontsIndividualLetterConfig[(int)font].text.alignByGeometry;
 			    letterText.text.horizontalOverflow = fontsIndividualLetterConfig[(int)font].text.horizontalOverflow;
 			    letterText.text.verticalOverflow = fontsIndividualLetterConfig[(int)font].text.verticalOverflow;
-			    letterText.text.color = fontsIndividualLetterConfig[(int)font].text.color;
+			    letterText.text.color = textColor;
 			    letterText.text.material = fontsIndividualLetterConfig[(int)font].text.material;
 			    letterText.text.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
 			    letterText.text.text = lineBreaks + word[current].ToString();
@@ -480,6 +493,16 @@ public class WordAnimator : MonoBehaviour
             }
         }
 
+        if(oldColor != textColor)
+        {
+            oldColor = textColor;
+
+            if(OnChangeTextColor != null)
+            {
+                OnChangeTextColor(textColor);
+            }
+        }
+
 		if (isPlaying) 
 		{
             if(Time.time >= timeLastAnimation + intervalBetweenAnimations)
@@ -569,7 +592,7 @@ public class WordAnimator : MonoBehaviour
 		{
             //t.fontSize = ((int)Mathf.Lerp((float)fontsIndividualLetterConfig[(int)font].text.fontSize,(float)fontsIndividualLetterConfig[(int)font].text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
             letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
-            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,fontsIndividualLetterConfig[(int)font].text.color.b,Mathf.Lerp(1f,0f,lerp));
+            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,letter.text.color.b,Mathf.Lerp(1f,0f,lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
 
@@ -581,7 +604,7 @@ public class WordAnimator : MonoBehaviour
 		foreach (Letter letter in lettersText) 
 		{
             letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
-            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,fontsIndividualLetterConfig[(int)font].text.color.b,Mathf.Lerp(1f,0f,lerp));
+            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,letter.text.color.b,Mathf.Lerp(1f,0f,lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
 
@@ -635,12 +658,12 @@ public class WordAnimator : MonoBehaviour
             if(isPlayingForward)
             {
                 letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
-                letter.text.color = new Color(letter.text.color.r, letter.text.color.g, fontsIndividualLetterConfig[(int)font].text.color.b, Mathf.Lerp(1f, 0f, lerp));
+                letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, Mathf.Lerp(1f, 0f, lerp));
             }
             else
             {
                 letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
-                letter.text.color = new Color(letter.text.color.r, letter.text.color.g, fontsIndividualLetterConfig[(int)font].text.color.b, Mathf.Lerp(1f, 0f, lerp));
+                letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, Mathf.Lerp(1f, 0f, lerp));
             }
         }
     }
