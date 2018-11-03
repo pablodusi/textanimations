@@ -13,7 +13,7 @@ public class WordAnimator : MonoBehaviour
 	//public string word;                                 //
 	public FontsEnum font;                              
 	public AnimationTypeEnum animationType;
-	public int fontSize;                                //
+	//public int fontSize;                                //
     public Vector3 position;                            //
 	public bool startAtBegining;
 	public bool isPlaying;
@@ -86,18 +86,18 @@ public class WordAnimator : MonoBehaviour
     {
         get
         {
-            return fontSize;
+            return text.fontSize;
         }
 
         set
         {
-            if(fontSize != value)
+            if(text.fontSize != value)
             {
-                fontSize = value;
+                text.fontSize = value;
 
                 if(OnFontSizeChange != null)
                 {
-                    OnFontSizeChange(fontSize);
+                    OnFontSizeChange(text.fontSize);
                 }
             }
         }
@@ -138,7 +138,7 @@ public class WordAnimator : MonoBehaviour
             textIndividualLetterConfig.ForceInitialize();
         }
 
-        fontSizeOld = fontSize;
+        fontSizeOld = text.fontSize;
         oldText = text.text;
         oldPosition = position;
         oldAnimation = animationType;
@@ -270,12 +270,12 @@ public class WordAnimator : MonoBehaviour
                         lettersText[currentLetter].rectTransform.position = position;
                         lettersText[currentLetter].rectTransform.localPosition = lettersText[currentLetter].rectTransform.position + adddeltaPosition;
                         lettersText[currentLetter].RealPosition = lettersText[currentLetter].rectTransform.localPosition;
-                        adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
-                        lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
+                        adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, text.fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
+                        lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, text.fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, text.fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
                         //lettersText[currentLetter].rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x, GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
 
                         //Debug.Log("UpdateLetters " + lettersText[currentLetter].text.text.ToString());
-                        lettersText[currentLetter].text.fontSize = fontSize;
+                        lettersText[currentLetter].text.fontSize = text.fontSize;
 
                         currentLetter++;
                     }
@@ -336,8 +336,8 @@ public class WordAnimator : MonoBehaviour
 
                 letterText.text.font = fontsIndividualLetterConfig[(int)font].text.font;
                 letterText.text.fontStyle = fontsIndividualLetterConfig[(int)font].text.fontStyle;
-			    letterText.text.fontSize = fontSize;
-			    letterText.rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x,GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
+			    letterText.text.fontSize = text.fontSize;
+			    letterText.rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x,GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
 
 			    letterText.text.lineSpacing = fontsIndividualLetterConfig[(int)font].text.lineSpacing;
 			    letterText.text.alignment = fontsIndividualLetterConfig[(int)font].text.alignment;
@@ -355,7 +355,7 @@ public class WordAnimator : MonoBehaviour
 			    letterText.rectTransform.localScale = fontsIndividualLetterConfig[(int)font].text.rectTransform.localScale;
 			    letterText.rectTransform.localPosition = letterText.rectTransform.position + adddeltaPosition;
                 letterText.RealPosition = letterText.rectTransform.localPosition;
-                adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
+                adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
 
 			    lettersText.Add(letterText);
                 //Debug.Log(adddeltaPosition);
@@ -455,13 +455,13 @@ public class WordAnimator : MonoBehaviour
 
 	void Update()
 	{
-        if(fontSizeOld != fontSize)
+        if(fontSizeOld != text.fontSize)
         {
-            fontSizeOld = fontSize;
+            fontSizeOld = text.fontSize;
 
             if (OnFontSizeChange != null)
             {
-                OnFontSizeChange(fontSize);
+                OnFontSizeChange(text.fontSize);
             }
         }
 
@@ -593,7 +593,7 @@ public class WordAnimator : MonoBehaviour
 		foreach (Letter letter in lettersText) 
 		{
             //t.fontSize = ((int)Mathf.Lerp((float)fontsIndividualLetterConfig[(int)font].text.fontSize,(float)fontsIndividualLetterConfig[(int)font].text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
-            letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
+            letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize,(float)text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
             letter.text.color = new Color(letter.text.color.r, letter.text.color.g,letter.text.color.b,Mathf.Lerp(1f,0f,lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
@@ -605,7 +605,7 @@ public class WordAnimator : MonoBehaviour
 	{
 		foreach (Letter letter in lettersText) 
 		{
-            letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
+            letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
             letter.text.color = new Color(letter.text.color.r, letter.text.color.g,letter.text.color.b,Mathf.Lerp(1f,0f,lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
@@ -616,7 +616,7 @@ public class WordAnimator : MonoBehaviour
 	{
 		foreach (Letter letter in lettersText)
 		{
-            letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
+            letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize,(float)text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
             letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b,Mathf.Lerp(0f,1f,lerp));
 		}
 	}
@@ -625,7 +625,7 @@ public class WordAnimator : MonoBehaviour
 	{
 		foreach (Letter letter in lettersText)
 		{
-            letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize,(float)fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
+            letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize,(float)text.fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
             letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b,Mathf.Lerp(0f,1f,lerp));
 		}
 	}
@@ -643,7 +643,7 @@ public class WordAnimator : MonoBehaviour
                 oldTimeShake = Time.time;
                 foreach (Letter letter in lettersText)
                 {
-                    letter.rectTransform.localPosition = letter.RealPosition + new Vector3(GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize,fontSize, Random.Range(min1, max1)), GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize, fontSize, Random.Range(min1, max1)), 0f);
+                    letter.rectTransform.localPosition = letter.RealPosition + new Vector3(GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize, Random.Range(min1, max1)), GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize, text.fontSize, Random.Range(min1, max1)), 0f);
                 }
             }
 
@@ -659,12 +659,12 @@ public class WordAnimator : MonoBehaviour
         {
             if(isPlayingForward)
             {
-                letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
+                letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
                 letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, Mathf.Lerp(1f, 0f, lerp));
             }
             else
             {
-                letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
+                letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
                 letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, Mathf.Lerp(1f, 0f, lerp));
             }
         }
@@ -680,12 +680,12 @@ public class WordAnimator : MonoBehaviour
         {
             if (isPlayingForward)
             {
-                letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
+                letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
                 letter.text.color = textColor;
             }
             else
             {
-                letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
+                letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
                 letter.text.color = textColor;
             }
         }

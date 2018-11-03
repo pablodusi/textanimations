@@ -25,7 +25,8 @@
         - New Animation: "Heart Beat Without Alpha"                                                          DONE
         - Pause time between instance of animations                                                          DONE
         - Include Text component into WordAnimator component and extract properties from there
-
+            - Replace Word property for text.text property                                                   DONE
+            - Replace fontSize property for text.fontSize property                                           DONE
 
 
  */ 
