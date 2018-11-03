@@ -38,12 +38,17 @@ public class WordAnimator : MonoBehaviour
     private int fontSizeOld;
     private string oldText;
     private Vector3 oldPosition;
-    private float oldTimeShake;
+    private float oldTimeAnimation;
     private Color oldColor;
     private Material oldMaterial;
     private bool isPlayingForward;          // False is reverse
     private float timeLastAnimation;        // The time when the last animation stopped
+    private float timeLastFrame;
     private AnimationTypeEnum oldAnimation;
+    private string cleanText;               // Text plane without /n return codes or nothing.
+    private int counter1;
+    private bool isInterpolation;
+    private bool animationEnd;
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -149,6 +154,7 @@ public class WordAnimator : MonoBehaviour
         oldPosition = rectTransform.localPosition;
         oldAnimation = animationType;
         oldMaterial = text.material;
+        animationEnd = false;
 
         isPlayingForward = true;
         timeLastAnimation = Time.time;
@@ -264,6 +270,9 @@ public class WordAnimator : MonoBehaviour
                 int current = 0;
                 int currentLetter = 0;
 
+                cleanText = text.text;
+                cleanText.Replace("/n", string.Empty);
+
                 while (current < text.text.Length)
                 {
                     if (text.text[current] != '/')
@@ -327,8 +336,11 @@ public class WordAnimator : MonoBehaviour
         int newLineCounter = 0;
         int current = 0;
 
+        cleanText = text.text;
+        cleanText.Replace("/n", string.Empty);
 
-        while(current < text.text.Length)
+
+        while (current < text.text.Length)
         {
             if(text.text[current] != '/')
             {
@@ -407,10 +419,15 @@ public class WordAnimator : MonoBehaviour
 	{
 		isPlaying = true;
 		lerp = 0f;
+        counter1 = 0;
+        isInterpolation = true;
+        animationEnd = false;
+        timeLastFrame = Time.time;
 
         SetLettersInvisible();
+        oldTimeAnimation = Time.time;
 
-		switch (animationType) 
+        switch (animationType) 
 		{
 			case AnimationTypeEnum.ANIMATION1:
 				ClearSizeRectTransform();
@@ -426,13 +443,20 @@ public class WordAnimator : MonoBehaviour
 				break;
             case AnimationTypeEnum.ANIMATION5:
                 ClearSizeRectTransform();
-                oldTimeShake = Time.time;
                 break;
             case AnimationTypeEnum.ANIMATION6:
                 ClearSizeRectTransform();
                 break;
             case AnimationTypeEnum.ANIMATION7:
                 ClearSizeRectTransform();
+                break;
+            case AnimationTypeEnum.ANIMATION8:
+                ClearSizeRectTransform();
+
+                SetLettersInvisible();
+
+                isInterpolation = false;
+
                 break;
 
             case AnimationTypeEnum.NONE:
@@ -557,29 +581,51 @@ public class WordAnimator : MonoBehaviour
 
 		if (isPlaying) 
 		{
-            if(Time.time >= timeLastAnimation + intervalBetweenAnimations)
+            if(isInterpolation)
             { 
-			    lerp += Time.deltaTime * speed;
+                if (Time.time >= timeLastAnimation + intervalBetweenAnimations)
+                { 
+			        lerp += Time.deltaTime * speed;
             
-			    if(lerp < 1f)
-			    {
-				    PlayFrame();
-			    }
-			    else
-			    {
-                    isPlayingForward = !isPlayingForward;
-                    timeLastAnimation = Time.time;
+			        if(lerp < 1f)
+			        {
+				        PlayFrame();
+			        }
+			        else
+			        {
+                        isPlayingForward = !isPlayingForward;
+                        timeLastAnimation = Time.time;
                     
-				    if(loop)
-				    {
-					    Play();
-				    }
-				    else
-				    {
-					    Stop();
-                        //SetLettersInvisible();
-				    }
-			    }
+				        if(loop)
+				        {
+					        Play();
+				        }
+				        else
+				        {
+					        Stop();
+                            //SetLettersInvisible();
+				        }
+			        }
+                }
+            }
+            else
+            {
+                    PlayFrameNotInterpolation();  
+                    
+                    if(animationEnd)
+                    {
+                        isPlayingForward = !isPlayingForward;
+                        timeLastAnimation = Time.time;
+
+                        if (loop)
+                        {
+                            Play();
+                        }
+                        else
+                        {
+                            Stop();
+                        }
+                    }                
             }
         }
 	}
@@ -610,7 +656,9 @@ public class WordAnimator : MonoBehaviour
 	private void PlayFrame()
 	{
         SetLettersVisible();
-		switch (animationType) 
+        timeLastFrame = Time.time;
+
+        switch (animationType) 
 		{
 			case AnimationTypeEnum.ANIMATION1:
 				Animation1();	
@@ -633,12 +681,29 @@ public class WordAnimator : MonoBehaviour
             case AnimationTypeEnum.ANIMATION7:
                 Animation7();
                 break;
+            case AnimationTypeEnum.ANIMATION8:
+                Animation8();
+                break;
             case AnimationTypeEnum.NONE:
 				break;
 		}
 	}
 
-	private void Animation1()
+    private void PlayFrameNotInterpolation()
+    {
+        //SetLettersVisible();
+
+        switch (animationType)
+        {
+            case AnimationTypeEnum.ANIMATION8:
+                Animation8();
+                break;
+            case AnimationTypeEnum.NONE:
+                break;
+        }
+    }
+
+    private void Animation1()
 	{
 		foreach (Letter letter in lettersText) 
 		{
@@ -688,9 +753,9 @@ public class WordAnimator : MonoBehaviour
         // Shake with random movements from center position
         // Uses min1 and max1
 
-            if(Time.time >= oldTimeShake + interval1)
+            if(Time.time >= oldTimeAnimation + interval1)
             {
-                oldTimeShake = Time.time;
+                oldTimeAnimation = Time.time;
                 foreach (Letter letter in lettersText)
                 {
                     letter.rectTransform.localPosition = letter.RealPosition + new Vector3(GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize, Random.Range(min1, max1)), GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize, text.fontSize, Random.Range(min1, max1)), 0f);
@@ -738,6 +803,23 @@ public class WordAnimator : MonoBehaviour
             {
                 letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f + fontSizeNormalizedPercentDiff), 1f - lerp));
                 letter.text.color = text.color;
+            }
+        }
+    }
+
+    private void Animation8()
+    {
+        if (Time.time > timeLastFrame + interval1)
+        {
+            if (counter1 < lettersText.Count)
+            {
+                lettersText[counter1].text.color = new Color(lettersText[counter1].text.color.r, lettersText[counter1].text.color.g, lettersText[counter1].text.color.b, 1f);
+                counter1++;
+                timeLastFrame = Time.time;
+            }
+            else
+            {
+                animationEnd = true;
             }
         }
     }

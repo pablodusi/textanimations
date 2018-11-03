@@ -224,14 +224,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   font: 0
-  animationType: 7
+  animationType: 8
   startAtBegining: 1
   isPlaying: 0
   loop: 1
   setInvisibleWhenStops: 0
   speed: 1
-  interval1: 0.001
-  intervalBetweenAnimations: 0.1
+  interval1: 0.2
+  intervalBetweenAnimations: 0.2
   min1: 1
   max1: 5
   fontSizeNormalizedPercentDiff: 0.4

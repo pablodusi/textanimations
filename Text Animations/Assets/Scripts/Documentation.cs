@@ -32,5 +32,6 @@
             - Replace WordAnimator.position for WordAnimator.rectTransform.localPosition                     DONE
             - Replaced WordAnimator.textColor to WordAnimator.text.color                                     DONE
         - Constantly update Text and Rect Transforms components constantly                                   DONE
-
+        - New Animation: "Automatic Writing"                                                                 DONE
+        - Fuse animations that make the same but uses the alpha in inverse way
  */ 
