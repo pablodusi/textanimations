@@ -224,8 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   font: 0
-  animationType: 6
-  position: {x: -200, y: 0, z: 0}
+  animationType: 7
   startAtBegining: 1
   isPlaying: 0
   loop: 1
@@ -235,7 +234,6 @@ MonoBehaviour:
   intervalBetweenAnimations: 0.1
   min1: 1
   max1: 5
-  textColor: {r: 1, g: 0, b: 0.9815202, a: 1}
   fontSizeNormalizedPercentDiff: 0.4
   fontsIndividualLetterConfig:
   - {fileID: 114779054392031916, guid: a38c748f4a93d104e8aaeccb6b24867c, type: 2}

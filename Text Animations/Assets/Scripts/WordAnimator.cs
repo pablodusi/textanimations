@@ -694,6 +694,7 @@ public class WordAnimator : MonoBehaviour
                 foreach (Letter letter in lettersText)
                 {
                     letter.rectTransform.localPosition = letter.RealPosition + new Vector3(GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize, Random.Range(min1, max1)), GetValueByFontSize(fontsIndividualLetterConfig[(int)font].baseFontSize, text.fontSize, Random.Range(min1, max1)), 0f);
+                    letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, text.color.a);
                 }
             }
 

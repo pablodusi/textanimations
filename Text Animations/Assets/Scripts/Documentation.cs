@@ -18,7 +18,8 @@
             - There are animations that have to use textColor property                                       DONE
             - When heart beat animation plays, the first or last frame don't uses the real alpha             DONE
                 NOTE: Search for SetLettersVisible
-            - Some alpha values doesn't change when you change the color property
+            - Some alpha values doesn't change when you change the color property                            DONE
+            - Solve warning "no script for GameObjectSelectionItem"
     
     Tasks
         - New class "Letter" to access the GameObject "Letter"                                               DONE
