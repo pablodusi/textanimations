@@ -19,6 +19,7 @@ public class WordAnimator : MonoBehaviour
 	public bool isPlaying;
     public bool loop = true;
     public bool setInvisibleWhenStops;
+    public bool inverseAlpha = false;
     public float speed = 1f;
     public float interval1;
     public float intervalBetweenAnimations = 1f;
@@ -434,12 +435,6 @@ public class WordAnimator : MonoBehaviour
 			case AnimationTypeEnum.ANIMATION2:
 				ClearSizeRectTransform();
 				break;
-			case AnimationTypeEnum.ANIMATION3:
-				ClearSizeRectTransform();
-				break;
-			case AnimationTypeEnum.ANIMATION4:
-				ClearSizeRectTransform();	
-				break;
             case AnimationTypeEnum.ANIMATION5:
                 ClearSizeRectTransform();
                 break;
@@ -673,12 +668,6 @@ public class WordAnimator : MonoBehaviour
 			case AnimationTypeEnum.ANIMATION2:
 				Animation2();
 			break;
-			case AnimationTypeEnum.ANIMATION3:
-				Animation3();
-				break;
-			case AnimationTypeEnum.ANIMATION4:
-				Animation4();
-				break;
             case AnimationTypeEnum.ANIMATION5:
                 Animation5();
                 break;
@@ -719,39 +708,20 @@ public class WordAnimator : MonoBehaviour
 		{
             //t.fontSize = ((int)Mathf.Lerp((float)fontsIndividualLetterConfig[(int)font].text.fontSize,(float)fontsIndividualLetterConfig[(int)font].text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
             letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize,(float)text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
-            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,letter.text.color.b,Mathf.Lerp(1f,0f,lerp));
+            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,letter.text.color.b,Mathf.Lerp(inverseAlpha == false? 1f : 0f, inverseAlpha == false ? 0f : 1f, lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
 
 		//Debug.Log ((float)text.fontSize * (1f + fontSizeNormalizedPercentDiff));
 	}
 
-	private void Animation2()
+    private void Animation2()
 	{
 		foreach (Letter letter in lettersText) 
 		{
             letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
-            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,letter.text.color.b,Mathf.Lerp(1f,0f,lerp));
+            letter.text.color = new Color(letter.text.color.r, letter.text.color.g,letter.text.color.b,Mathf.Lerp(inverseAlpha == false?1f : 0f,inverseAlpha == false? 0f : 1f,lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
-		}
-
-	}
-
-	private void Animation3()
-	{
-		foreach (Letter letter in lettersText)
-		{
-            letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize,(float)text.fontSize * (1f + fontSizeNormalizedPercentDiff),lerp));
-            letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b,Mathf.Lerp(0f,1f,lerp));
-		}
-	}
-
-	private void Animation4()
-	{
-		foreach (Letter letter in lettersText)
-		{
-            letter.text.fontSize = ((int)Mathf.Lerp((float)text.fontSize,(float)text.fontSize * (1f - fontSizeNormalizedPercentDiff),lerp));
-            letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b,Mathf.Lerp(0f,1f,lerp));
 		}
 	}
 

@@ -33,7 +33,7 @@
             - Replaced WordAnimator.textColor to WordAnimator.text.color                                     DONE
         - Constantly update Text and Rect Transforms components constantly                                   DONE
         - New Animation: "Automatic Writing"                                                                 DONE
-        - Fuse animations that make the same but uses the alpha in inverse way
+        - Fuse animations that make the same but uses the alpha in inverse way				     DONE
         - Ability to combine more than one animation at the time
-        - New Animation: "Auotamic Writing" with "Animation 1"
+        - New Animation: "Auotamic Writing" with "Animation 1"						     DONE
  */ 

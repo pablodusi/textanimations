@@ -224,11 +224,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   font: 0
-  animationType: 9
+  animationType: 3
   startAtBegining: 1
   isPlaying: 0
   loop: 1
   setInvisibleWhenStops: 0
+  inverseAlpha: 1
   speed: 1
   interval1: 0.2
   intervalBetweenAnimations: 0.2
