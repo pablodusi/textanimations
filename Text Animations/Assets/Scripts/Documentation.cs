@@ -27,6 +27,7 @@
         - Include Text component into WordAnimator component and extract properties from there
             - Replace Word property for text.text property                                                   DONE
             - Replace fontSize property for text.fontSize property                                           DONE
+            - Replace WordAnimator.position for WordAnimator.rectTransform.localPosition                     DONE
 
 
  */ 

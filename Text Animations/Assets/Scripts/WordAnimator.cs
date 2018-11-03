@@ -14,7 +14,7 @@ public class WordAnimator : MonoBehaviour
 	public FontsEnum font;                              
 	public AnimationTypeEnum animationType;
 	//public int fontSize;                                //
-    public Vector3 position;                            //
+    //public Vector3 position;                            //
 	public bool startAtBegining;
 	public bool isPlaying;
     public bool loop = true;
@@ -31,6 +31,7 @@ public class WordAnimator : MonoBehaviour
 	public GameObject canvasPrefab;
 
     private Text text;
+    private RectTransform rectTransform;
 	private List<Letter> lettersText;
 	private Canvas canvas;
 	private float lerp;
@@ -132,15 +133,16 @@ public class WordAnimator : MonoBehaviour
 	void Awake()
 	{
         text = GetComponent<Text>();
+        rectTransform = GetComponent<RectTransform>();
 
-        foreach(TextIndividualLetterConfig textIndividualLetterConfig in fontsIndividualLetterConfig)
+        foreach (TextIndividualLetterConfig textIndividualLetterConfig in fontsIndividualLetterConfig)
         {
             textIndividualLetterConfig.ForceInitialize();
         }
 
         fontSizeOld = text.fontSize;
         oldText = text.text;
-        oldPosition = position;
+        oldPosition = rectTransform.localPosition;
         oldAnimation = animationType;
 
         isPlayingForward = true;
@@ -267,7 +269,7 @@ public class WordAnimator : MonoBehaviour
                         }
 
                         lettersText[currentLetter].text.text = lineBreaks + text.text[current].ToString();
-                        lettersText[currentLetter].rectTransform.position = position;
+                        lettersText[currentLetter].rectTransform.position = rectTransform.localPosition;
                         lettersText[currentLetter].rectTransform.localPosition = lettersText[currentLetter].rectTransform.position + adddeltaPosition;
                         lettersText[currentLetter].RealPosition = lettersText[currentLetter].rectTransform.localPosition;
                         adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize, text.fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
@@ -349,7 +351,7 @@ public class WordAnimator : MonoBehaviour
 			    letterText.text.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
 			    letterText.text.text = lineBreaks + text.text[current].ToString();
 			    //Debug.Log(letter.ToString());
-			    letterText.rectTransform.position = position;
+			    letterText.rectTransform.position = rectTransform.localPosition;
 			    //Debug.Log(text.rectTransform.position);
 			    letterText.rectTransform.rotation = fontsIndividualLetterConfig[(int)font].text.rectTransform.rotation;
 			    letterText.rectTransform.localScale = fontsIndividualLetterConfig[(int)font].text.rectTransform.localScale;
@@ -475,13 +477,13 @@ public class WordAnimator : MonoBehaviour
             }
         }
 
-        if(oldPosition != position)
+        if(oldPosition != rectTransform.localPosition)
         {
-            oldPosition = position;
+            oldPosition = rectTransform.localPosition;
 
             if(OnChangePosition != null)
             {
-                OnChangePosition(position);
+                OnChangePosition(rectTransform.localPosition);
             }
         }
 
