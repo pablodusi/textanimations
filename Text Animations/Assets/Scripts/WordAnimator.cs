@@ -10,11 +10,11 @@ using System.Collections.Generic;
 //[ExecuteInEditMode]
 public class WordAnimator : MonoBehaviour 
 {
-	public string word;
-	public FontsEnum font;
+	//public string word;                                 //
+	public FontsEnum font;                              
 	public AnimationTypeEnum animationType;
-	public int fontSize;
-    public Vector3 position;
+	public int fontSize;                                //
+    public Vector3 position;                            //
 	public bool startAtBegining;
 	public bool isPlaying;
     public bool loop = true;
@@ -24,18 +24,18 @@ public class WordAnimator : MonoBehaviour
     public float intervalBetweenAnimations = 1f;
     public float min1;
     public float max1;
-    public Color textColor;
+    public Color textColor;                             //
 	public float fontSizeNormalizedPercentDiff;
     public List<TextIndividualLetterConfig> fontsIndividualLetterConfig;
     public GameObject letterPrefab;
 	public GameObject canvasPrefab;
 
-    private Text test;
+    private Text text;
 	private List<Letter> lettersText;
 	private Canvas canvas;
 	private float lerp;
     private int fontSizeOld;
-    private string oldWord;
+    private string oldText;
     private Vector3 oldPosition;
     private float oldTimeShake;
     private Color oldColor;
@@ -52,8 +52,8 @@ public class WordAnimator : MonoBehaviour
     public delegate void ChangeAnimation(AnimationTypeEnum newAnimation);
     public event ChangeAnimation OnChangeAnimation;
 
-    public delegate void ChangeWord(string newWord);
-    public event ChangeWord OnChangeWord;
+    public delegate void ChangeText(string newText);
+    public event ChangeText OnChangeText;
 
     public delegate void ChangePosition(Vector3 newPosition);
     public event ChangePosition OnChangePosition;
@@ -131,13 +131,15 @@ public class WordAnimator : MonoBehaviour
 
 	void Awake()
 	{
+        text = GetComponent<Text>();
+
         foreach(TextIndividualLetterConfig textIndividualLetterConfig in fontsIndividualLetterConfig)
         {
             textIndividualLetterConfig.ForceInitialize();
         }
 
         fontSizeOld = fontSize;
-        oldWord = word;
+        oldText = text.text;
         oldPosition = position;
         oldAnimation = animationType;
 
@@ -157,7 +159,7 @@ public class WordAnimator : MonoBehaviour
         OnFontSizeChange += HandleOnFontSizeChange;
         OnFontChange += HandleOnFontChange;
         OnChangeAnimation += HandleOnChangeAnimation;
-        OnChangeWord += HandleOnChangeWord;
+        OnChangeText += HandleOnChangeText;
         OnChangePosition += HandleChangePosition;
         OnChangeTextColor += HandleChangeTextColor;
     }
@@ -167,7 +169,7 @@ public class WordAnimator : MonoBehaviour
         OnFontSizeChange -= HandleOnFontSizeChange;
         OnFontChange -= HandleOnFontChange;
         OnChangeAnimation -= HandleOnChangeAnimation;
-        OnChangeWord -= HandleOnChangeWord;
+        OnChangeText -= HandleOnChangeText;
         OnChangePosition -= HandleChangePosition;
         OnChangeTextColor -= HandleChangeTextColor;
     }
@@ -253,9 +255,9 @@ public class WordAnimator : MonoBehaviour
                 int current = 0;
                 int currentLetter = 0;
 
-                while (current < word.Length)
+                while (current < text.text.Length)
                 {
-                    if (word[current] != '/')
+                    if (text.text[current] != '/')
                     {
                         string lineBreaks = string.Empty;
 
@@ -264,7 +266,7 @@ public class WordAnimator : MonoBehaviour
                             lineBreaks += "\n";
                         }
 
-                        lettersText[currentLetter].text.text = lineBreaks + word[current].ToString();
+                        lettersText[currentLetter].text.text = lineBreaks + text.text[current].ToString();
                         lettersText[currentLetter].rectTransform.position = position;
                         lettersText[currentLetter].rectTransform.localPosition = lettersText[currentLetter].rectTransform.position + adddeltaPosition;
                         lettersText[currentLetter].RealPosition = lettersText[currentLetter].rectTransform.localPosition;
@@ -281,9 +283,9 @@ public class WordAnimator : MonoBehaviour
                     {
                             int next = current + 1;
 
-                            if (next < word.Length)
+                            if (next < text.text.Length)
                             {
-                                if (word[next] == 'n')
+                                if (text.text[next] == 'n')
                                 {
                                     adddeltaPosition = new Vector3(0f, adddeltaPosition.y, adddeltaPosition.z);
                                     newLineCounter++;
@@ -316,10 +318,10 @@ public class WordAnimator : MonoBehaviour
         int newLineCounter = 0;
         int current = 0;
 
-        //for (char letter in word) 
-        while(current < word.Length)
+
+        while(current < text.text.Length)
         {
-            if(word[current] != '/')
+            if(text.text[current] != '/')
             {
                 string lineBreaks = string.Empty;
 
@@ -345,7 +347,7 @@ public class WordAnimator : MonoBehaviour
 			    letterText.text.color = textColor;
 			    letterText.text.material = fontsIndividualLetterConfig[(int)font].text.material;
 			    letterText.text.raycastTarget = fontsIndividualLetterConfig[(int)font].text.raycastTarget;
-			    letterText.text.text = lineBreaks + word[current].ToString();
+			    letterText.text.text = lineBreaks + text.text[current].ToString();
 			    //Debug.Log(letter.ToString());
 			    letterText.rectTransform.position = position;
 			    //Debug.Log(text.rectTransform.position);
@@ -367,9 +369,9 @@ public class WordAnimator : MonoBehaviour
             {
                 int next = current + 1;
 
-                if(next < word.Length)
+                if(next < text.text.Length)
                 {
-                    if (word[next] == 'n')
+                    if (text.text[next] == 'n')
                     {
                         adddeltaPosition = new Vector3(0f, adddeltaPosition.y, adddeltaPosition.z);
                         newLineCounter++;
@@ -463,13 +465,13 @@ public class WordAnimator : MonoBehaviour
             }
         }
 
-        if(oldWord != word)
+        if(oldText != text.text)
         {
-            oldWord = word;
+            oldText = text.text;
 
-            if(OnChangeWord != null)
+            if(OnChangeText != null)
             {
-                OnChangeWord(word);
+                OnChangeText(text.text);
             }
         }
 
@@ -532,7 +534,7 @@ public class WordAnimator : MonoBehaviour
         }
 	}
 
-    private void HandleOnChangeWord(string newWord)
+    private void HandleOnChangeText(string newText)
     {
         Stop();
         CreateLetters();
