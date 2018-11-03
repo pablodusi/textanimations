@@ -161,7 +161,7 @@ public class WordAnimator : MonoBehaviour
 
         CreateLetters ();		
 
-		if (startAtBegining) 
+		if (startAtBegining)
 		{
 			Play ();
 		}
@@ -339,7 +339,6 @@ public class WordAnimator : MonoBehaviour
         cleanText = text.text;
         cleanText.Replace("/n", string.Empty);
 
-
         while (current < text.text.Length)
         {
             if(text.text[current] != '/')
@@ -378,7 +377,7 @@ public class WordAnimator : MonoBehaviour
                 letterText.RealPosition = letterText.rectTransform.localPosition;
                 adddeltaPosition += GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize) * fontsIndividualLetterConfig[(int)font].distanceBetweenLetters;
 
-			    lettersText.Add(letterText);
+                lettersText.Add(letterText);
                 //Debug.Log(adddeltaPosition);
                 //Debug.Log(letterText.rectTransform.anchoredPosition);
                 //Debug.Log(letterText.rectTransform.localPosition);
@@ -457,6 +456,14 @@ public class WordAnimator : MonoBehaviour
 
                 isInterpolation = false;
 
+                break;
+
+            case AnimationTypeEnum.ANIMATION9:
+                ClearSizeRectTransform();
+
+                SetLettersInvisible();
+
+                isInterpolation = false;
                 break;
 
             case AnimationTypeEnum.NONE:
@@ -614,7 +621,7 @@ public class WordAnimator : MonoBehaviour
                     
                     if(animationEnd)
                     {
-                        isPlayingForward = !isPlayingForward;
+                        //isPlayingForward = !isPlayingForward;
                         timeLastAnimation = Time.time;
 
                         if (loop)
@@ -697,6 +704,9 @@ public class WordAnimator : MonoBehaviour
         {
             case AnimationTypeEnum.ANIMATION8:
                 Animation8();
+                break;
+            case AnimationTypeEnum.ANIMATION9:
+                Animation9();
                 break;
             case AnimationTypeEnum.NONE:
                 break;
@@ -820,6 +830,47 @@ public class WordAnimator : MonoBehaviour
             else
             {
                 animationEnd = true;
+            }
+        }
+
+   }
+
+    private void Animation9()
+    {
+        if (Time.time > timeLastFrame + interval1)
+        {
+            if (counter1 < lettersText.Count)
+            {
+                //lettersText[counter1].text.color = new Color(lettersText[counter1].text.color.r, lettersText[counter1].text.color.g, lettersText[counter1].text.color.b, 1f);
+                counter1++;
+                timeLastFrame = Time.time;
+            }
+        }
+
+        if (Time.time >= timeLastAnimation + intervalBetweenAnimations)
+        {
+            lerp += Time.deltaTime * speed;
+
+            //Debug.Log("lerp " + lerp.ToString());
+            if (lerp < 1f)
+            {
+                for (int i = 0; i < counter1; i++)
+                {
+                    lettersText[i].text.fontSize = ((int)Mathf.Lerp((float)text.fontSize, (float)text.fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
+                    lettersText[i].text.color = new Color(lettersText[i].text.color.r, lettersText[i].text.color.g, lettersText[i].text.color.b, Mathf.Lerp(1f, 0f, lerp));
+                }
+            }
+            else
+            {
+                timeLastAnimation = Time.time;
+                lerp = 0f;
+
+                if(counter1 >= lettersText.Count)
+                {
+                    animationEnd = true;    
+                }
+
+                //Debug.Log("Animation1 Finished timeLastAnimation = " + timeLastAnimation.ToString());
             }
         }
     }

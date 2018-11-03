@@ -34,4 +34,6 @@
         - Constantly update Text and Rect Transforms components constantly                                   DONE
         - New Animation: "Automatic Writing"                                                                 DONE
         - Fuse animations that make the same but uses the alpha in inverse way
+        - Ability to combine more than one animation at the time
+        - New Animation: "Auotamic Writing" with "Animation 1"
  */ 
