@@ -224,17 +224,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   font: 0
-  animationType: 3
+  animationType: 8
   startAtBegining: 1
   isPlaying: 0
   loop: 1
   setInvisibleWhenStops: 0
   inverseAlpha: 1
-  speed: 1
+  speed: 2
+  rotationSpeed: 100
   interval1: 0.2
   intervalBetweenAnimations: 0.2
   min1: 1
   max1: 5
+  startPosition: {x: 0, y: -300, z: 0}
   fontSizeNormalizedPercentDiff: 0.4
   fontsIndividualLetterConfig:
   - {fileID: 114779054392031916, guid: a38c748f4a93d104e8aaeccb6b24867c, type: 2}
@@ -290,6 +292,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -200, y: 0}
+  m_AnchoredPosition: {x: -300, y: 0}
   m_SizeDelta: {x: 512, y: 512}
   m_Pivot: {x: 0.5, y: 0.5}

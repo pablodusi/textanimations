@@ -6,6 +6,8 @@ public class Letter : MonoBehaviour
     private Vector3 realPosition;
     private Text _text;
     private RectTransform _rectTransform;
+    private LetterAnimations _letterAnimations;
+    private float _realFontSize;
 
     void Awake()
     {
@@ -16,6 +18,27 @@ public class Letter : MonoBehaviour
     {
         _text = GetComponent<Text>();
         _rectTransform = GetComponent<RectTransform>();
+        _letterAnimations = GetComponent<LetterAnimations>();
+    }
+
+    public float realFontSize
+    {
+        get
+        {
+            return _realFontSize;
+        }
+
+        set
+        {
+            _realFontSize = value;
+        }
+    }
+    public LetterAnimations letterAnimations
+    {
+        get
+        {
+            return _letterAnimations;
+        }
     }
 
     public Vector3 RealPosition

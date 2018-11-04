@@ -21,12 +21,15 @@ public class WordAnimator : MonoBehaviour
     public bool setInvisibleWhenStops;
     public bool inverseAlpha = false;
     public float speed = 1f;
+    public float rotationSpeed = 1f;
     public float interval1;
     public float intervalBetweenAnimations = 1f;
     public float min1;
     public float max1;
+    public Vector3 startPosition;
     //public Color textColor;                             //
 	public float fontSizeNormalizedPercentDiff;
+    //public Transform startPosition;
     public List<TextIndividualLetterConfig> fontsIndividualLetterConfig;
     public GameObject letterPrefab;
 	public GameObject canvasPrefab;
@@ -50,6 +53,7 @@ public class WordAnimator : MonoBehaviour
     private int counter1;
     private bool isInterpolation;
     private bool animationEnd;
+    private LetterAnimationTypeEnum letterAnimationType;
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -295,7 +299,7 @@ public class WordAnimator : MonoBehaviour
 
                         //Debug.Log("UpdateLetters " + lettersText[currentLetter].text.text.ToString());
                         lettersText[currentLetter].text.fontSize = text.fontSize;
-
+                        lettersText[currentLetter].realFontSize = text.fontSize;
                         currentLetter++;
                     }
                     else
@@ -358,6 +362,7 @@ public class WordAnimator : MonoBehaviour
                 letterText.text.font = fontsIndividualLetterConfig[(int)font].text.font;
                 letterText.text.fontStyle = text.fontStyle;
 			    letterText.text.fontSize = text.fontSize;
+                letterText.realFontSize = text.fontSize;
 			    letterText.rectTransform.sizeDelta = new Vector2(GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.x,GetNormalizedPercentage(fontsIndividualLetterConfig[(int)font].baseFontSize,text.fontSize) * fontsIndividualLetterConfig[(int)font].sizeRectTransformForThisFontSize.y);
 
 			    letterText.text.lineSpacing = text.lineSpacing;
@@ -459,6 +464,12 @@ public class WordAnimator : MonoBehaviour
                 SetLettersInvisible();
 
                 isInterpolation = false;
+                break;
+            case AnimationTypeEnum.ANIMATION10:
+                ClearSizeRectTransform();
+                isInterpolation = false;
+                SetLettersInvisible();
+                letterAnimationType = LetterAnimationTypeEnum.FireWorks;
                 break;
 
             case AnimationTypeEnum.NONE:
@@ -697,6 +708,9 @@ public class WordAnimator : MonoBehaviour
             case AnimationTypeEnum.ANIMATION9:
                 Animation9();
                 break;
+            case AnimationTypeEnum.ANIMATION10:
+                Animation10();
+                break;
             case AnimationTypeEnum.NONE:
                 break;
         }
@@ -841,6 +855,39 @@ public class WordAnimator : MonoBehaviour
                 }
 
                 //Debug.Log("Animation1 Finished timeLastAnimation = " + timeLastAnimation.ToString());
+            }
+        }
+    }
+
+    private void Animation10()
+    {
+        // FireWorks 1
+
+        if (Time.time > timeLastFrame + interval1)
+        {
+            if (counter1 < lettersText.Count)
+            {
+                counter1++;
+                timeLastFrame = Time.time;
+            }
+        }
+
+        if(counter1 < lettersText.Count)
+        {
+            lettersText[counter1].letterAnimations.Play(letterAnimationType,
+                                                        startPosition,
+                                                        lettersText[counter1].RealPosition,
+                                                        loop,
+                                                        speed,
+                                                        rotationSpeed,
+                                                        fontSizeNormalizedPercentDiff);
+        }
+        else
+        {
+            if(!lettersText[lettersText.Count-1].letterAnimations.isPlaying)
+            { 
+                animationEnd = true;
+                lerp = 0f;
             }
         }
     }

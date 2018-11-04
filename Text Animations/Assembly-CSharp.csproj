@@ -59,10 +59,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\LetterAnimations.cs" />
+    <Compile Include="Assets\Scripts\AnimationPhaseTypeEnum.cs" />
     <Compile Include="Assets\Scripts\AnimationTypeEnum.cs" />
     <Compile Include="Assets\Scripts\Documentation.cs" />
     <Compile Include="Assets\Scripts\FontsEnum.cs" />
     <Compile Include="Assets\Scripts\Letter.cs" />
+    <Compile Include="Assets\Scripts\LetterAnimationTypeEnum.cs" />
     <Compile Include="Assets\Scripts\TextIndividualLetterConfig.cs" />
     <Compile Include="Assets\Scripts\WordAnimator.cs" />
     <Reference Include="UnityEditor.StandardEvents">
