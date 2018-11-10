@@ -1,5 +1,6 @@
 ﻿public enum LetterAnimationTypeEnum
 {
     NONE,
-    FireWorks
+    FireWorks,
+    FireWorks2
 }

@@ -18,8 +18,10 @@ GameObject:
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4411077179892574}
+  - component: {fileID: 224571400790531822}
   - component: {fileID: 114003799118908280}
+  - component: {fileID: 222384407896189780}
+  - component: {fileID: 114986278487024760}
   m_Layer: 0
   m_Name: WordAnimator
   m_TagString: Untagged
@@ -27,19 +29,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4411077179892574
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1521937346623154}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114003799118908280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -51,21 +40,90 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adfee529467b0d14aa2d2f2fbf185df1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  word: HELLO
-  fontsIndividualLetterConfig:
-  - {fileID: 114779054392031916, guid: a38c748f4a93d104e8aaeccb6b24867c, type: 2}
   font: 0
-  animationType: 1
-  fontSize: 120
-  position: {x: -200, y: 0, z: 0}
+  animationType: 9
   startAtBegining: 1
   isPlaying: 0
-  speed: 1
   loop: 1
+  soundsOn: 1
+  setInvisibleWhenStops: 0
+  inverseAlpha: 0
+  speed: 1
+  speed2: 1
+  rotationSpeed: 100
+  interval1: 0.5
+  intervalBetweenAnimations: 0.2
+  min1: 1
+  max1: 5
+  startPosition: {x: 0, y: -4, z: 0}
   fontSizeNormalizedPercentDiff: 0.4
+  fontsIndividualLetterConfig:
+  - {fileID: 114779054392031916, guid: a38c748f4a93d104e8aaeccb6b24867c, type: 2}
+  fireworkWhistles: []
+  fireworkShots: []
   letterPrefab: {fileID: 1537832372690732, guid: 791ef5e5fa7a46a42b1fec247c4788f4,
     type: 2}
   canvasPrefab: {fileID: 1207652338797410, guid: 25926c1a404405147a167cced21f452d,
     type: 2}
-  textTest: {fileID: 0}
-  setInvisibleWhenStops: 0
+  canvasWorldSpacePrefab: {fileID: 0}
+  particleSystemPrefab: {fileID: 1905245683202236, guid: 99c5795011256f240b94dd92f61159e4,
+    type: 2}
+  particleSystem2Prefab: {fileID: 1779082356159484, guid: 2a16ccf2b8a7d4b64a6db61ab16a891f,
+    type: 2}
+--- !u!114 &114986278487024760
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521937346623154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 60
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 139
+    m_Alignment: 1
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: HOLA COMO ESTAS
+--- !u!222 &222384407896189780
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521937346623154}
+--- !u!224 &224571400790531822
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521937346623154}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -300, y: -100}
+  m_SizeDelta: {x: 512, y: 512}
+  m_Pivot: {x: 0.5, y: 0.5}

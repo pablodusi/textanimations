@@ -18,9 +18,11 @@ public class WordAnimator : MonoBehaviour
 	public bool startAtBegining;
 	public bool isPlaying;
     public bool loop = true;
+    public bool soundsOn = true;
     public bool setInvisibleWhenStops;
     public bool inverseAlpha = false;
     public float speed = 1f;
+    public float speed2 = 1f;
     public float rotationSpeed = 1f;
     public float interval1;
     public float intervalBetweenAnimations = 1f;
@@ -31,8 +33,13 @@ public class WordAnimator : MonoBehaviour
 	public float fontSizeNormalizedPercentDiff;
     //public Transform startPosition;
     public List<TextIndividualLetterConfig> fontsIndividualLetterConfig;
+    public List<AudioClip> fireworkWhistles;
+    public List<AudioClip> fireworkShots;
     public GameObject letterPrefab;
 	public GameObject canvasPrefab;
+    public GameObject canvasWorldSpacePrefab;
+    public GameObject particleSystemPrefab;
+    public GameObject particleSystem2Prefab;
 
     private Text text;
     private RectTransform rectTransform;
@@ -431,7 +438,7 @@ public class WordAnimator : MonoBehaviour
 
         SetLettersInvisible();
         oldTimeAnimation = Time.time;
-
+        ChangeToScreenSpaceOverlayCanvas();
         switch (animationType) 
 		{
 			case AnimationTypeEnum.ANIMATION1:
@@ -471,11 +478,38 @@ public class WordAnimator : MonoBehaviour
                 SetLettersInvisible();
                 letterAnimationType = LetterAnimationTypeEnum.FireWorks;
                 break;
+            case AnimationTypeEnum.ANIMATION11:
+                ClearSizeRectTransform();
+                isInterpolation = false;
+                SetLettersInvisible();
+                letterAnimationType = LetterAnimationTypeEnum.FireWorks2;
+                ChangeToWorldSpaceCanvas();
+                break;
 
             case AnimationTypeEnum.NONE:
 				break;
 		}
 	}
+
+    private void ChangeToWorldSpaceCanvas()
+    {
+        /*
+        RectTransform rectTransformCanvas = canvas.GetComponent<RectTransform>();
+        RectTransform rectTransformWorldSpace = canvasWorldSpacePrefab.GetComponent<RectTransform>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        rectTransformCanvas = rectTransformWorldSpace;
+        */
+    }
+
+    private void ChangeToScreenSpaceOverlayCanvas()
+    {
+        /*
+        RectTransform rectTransformCanvas = canvas.GetComponent<RectTransform>();
+        RectTransform rectTransformScreenSpaceOverlayCanvas = canvasPrefab.GetComponent<RectTransform>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        rectTransformCanvas = rectTransformScreenSpaceOverlayCanvas;
+        */
+    }
 
 	public void Pause()
 	{
@@ -711,6 +745,9 @@ public class WordAnimator : MonoBehaviour
             case AnimationTypeEnum.ANIMATION10:
                 Animation10();
                 break;
+            case AnimationTypeEnum.ANIMATION11:
+                Animation11();
+                break;
             case AnimationTypeEnum.NONE:
                 break;
         }
@@ -725,6 +762,7 @@ public class WordAnimator : MonoBehaviour
             letter.text.color = new Color(letter.text.color.r, letter.text.color.g,letter.text.color.b,Mathf.Lerp(inverseAlpha == false? 1f : 0f, inverseAlpha == false ? 0f : 1f, lerp));
 			// Debug.Log("Lerp " + lerp.ToString());
 		}
+
 
 		//Debug.Log ((float)text.fontSize * (1f + fontSizeNormalizedPercentDiff));
 	}
@@ -890,6 +928,116 @@ public class WordAnimator : MonoBehaviour
                 lerp = 0f;
             }
         }
+    }
+
+    private void SetLettersInvisible(int indexFrom)
+    {
+        for(int i = 0; i < lettersText.Count; i++)
+        {
+            if(i >= indexFrom)
+            {
+                lettersText[i].text.color = new Color(lettersText[i].text.color.r, lettersText[i].text.color.g, lettersText[i].text.color.b,0f);
+            }
+        }
+    }
+
+    private void Animation11()
+    {
+        // FireWorks 2
+
+        SetLettersInvisible(counter1);
+
+        if (Time.time > timeLastFrame + interval1)
+        {
+            if (counter1 < lettersText.Count)
+            {
+                counter1++;
+                timeLastFrame = Time.time;
+                
+                /*
+                if (counter1 < lettersText.Count)
+                {
+                    Debug.Log(lettersText[counter1].text.text.ToString());
+                }*/
+
+                    while (counter1 < lettersText.Count && (lettersText[counter1].text.text.ToString() == " " || lettersText[counter1].text.text.ToString() == "/"))
+                    {
+                        if(lettersText[counter1].text.text.ToString() == "/")
+                        {
+                            counter1++;
+                        }
+                        else
+                        {
+                            //Debug.Log("The letter is empty");
+                        }
+                                        
+                        counter1++;
+                     }
+
+
+            }
+        }
+
+        if (counter1 < lettersText.Count)
+        {
+
+            Vector3 worldPosition = Vector3.zero;
+
+            //RectTransformUtility.ScreenPointToWorldPointInRectangle(lettersText[counter1].rectTransform, Camera.main.WorldToScreenPoint(lettersText[counter1].rectTransform.localPosition),null, out worldPosition);
+
+            //worldPosition = lettersText[counter1].rectTransform.TransformPoint(lettersText[counter1].rectTransform.localPosition);
+
+            //Vector3[] worldCornersRectTransform = new Vector3[4];
+            //lettersText[counter1].rectTransform.GetWorldCorners(worldCornersRectTransform);
+
+
+            //   worldPosition = RectTransformToScreenSpace(lettersText[counter1].rectTransform);
+
+            worldPosition = Camera.main.ScreenToWorldPoint(lettersText[counter1].rectTransform.transform.position);
+            worldPosition = new Vector3(worldPosition.x, -worldPosition.y, 0f);
+
+            lettersText[counter1].letterAnimations.Play(letterAnimationType,
+                                                        startPosition,
+                                                        //lettersText[counter1].rectTransform.transform.position,
+                                                        //worldPosition,
+                                                        worldPosition,
+                                                        loop,
+                                                        speed,
+                                                        rotationSpeed,
+                                                        fontSizeNormalizedPercentDiff,
+                                                        particleSystemPrefab,
+                                                        text.fontSize,
+                                                        speed2,
+                                                        interval1,
+                                                        particleSystem2Prefab,
+                                                        soundsOn,
+                                                        fireworkWhistles,
+                                                        fireworkShots
+                                                        );
+
+            //Debug.DrawLine(Vector3.zero, worldPosition);
+            //Debug.Log(worldPosition);
+            //Debug.Log(lettersText[counter1].rectTransform.localPosition);
+            //Debug.Log(lettersText[counter1].rectTransform.position);
+
+            //Debug.Log(lettersText[counter1].rectTransform.localPosition);
+            //Debug.DrawLine(Vector3.zero, worldCornersRectTransform[0]);
+            //Debug.Log(worldCornersRectTransform[0]);
+        }
+        else
+        {
+            if (!lettersText[lettersText.Count - 1].letterAnimations.isPlaying)
+            {
+                animationEnd = true;
+                lerp = 0f;
+            }
+        }
+    }
+
+    public static Rect RectTransformToScreenSpace(RectTransform transform)
+    {
+        Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
+        return new Rect((Vector2)transform.position - (size * 0.5f), size);
     }
 
     private float GetValueByPercentage(float value,float normalizedPercent)
