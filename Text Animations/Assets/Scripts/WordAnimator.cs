@@ -25,6 +25,7 @@ public class WordAnimator : MonoBehaviour
     public float speed2 = 1f;
     public float rotationSpeed = 1f;
     public float interval1;
+    public float interval2;
     public float intervalBetweenAnimations = 1f;
     public float min1;
     public float max1;
@@ -485,7 +486,12 @@ public class WordAnimator : MonoBehaviour
                 letterAnimationType = LetterAnimationTypeEnum.FireWorks2;
                 ChangeToWorldSpaceCanvas();
                 break;
-
+            case AnimationTypeEnum.ANIMATION12:
+                ClearSizeRectTransform();
+                isInterpolation = false;
+                SetLettersInvisible();
+                letterAnimationType = LetterAnimationTypeEnum.FireWorks3;
+                break;
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -748,6 +754,9 @@ public class WordAnimator : MonoBehaviour
             case AnimationTypeEnum.ANIMATION11:
                 Animation11();
                 break;
+            case AnimationTypeEnum.ANIMATION12:
+                Animation12();
+                break;
             case AnimationTypeEnum.NONE:
                 break;
         }
@@ -973,8 +982,6 @@ public class WordAnimator : MonoBehaviour
                                         
                         counter1++;
                      }
-
-
             }
         }
 
@@ -1023,6 +1030,66 @@ public class WordAnimator : MonoBehaviour
             //Debug.Log(lettersText[counter1].rectTransform.localPosition);
             //Debug.DrawLine(Vector3.zero, worldCornersRectTransform[0]);
             //Debug.Log(worldCornersRectTransform[0]);
+        }
+        else
+        {
+            if (!lettersText[lettersText.Count - 1].letterAnimations.isPlaying)
+            {
+                animationEnd = true;
+                lerp = 0f;
+            }
+        }
+    }
+
+    private void Animation12()
+    {
+        // FireWorks 3
+
+        SetLettersInvisible(counter1);
+
+        if (Time.time > timeLastFrame + interval1)
+        {
+            if (counter1 < lettersText.Count)
+            {
+                counter1++;
+                timeLastFrame = Time.time;
+
+                while (counter1 < lettersText.Count && (lettersText[counter1].text.text.ToString() == " " || lettersText[counter1].text.text.ToString() == "/"))
+                {
+                    if (lettersText[counter1].text.text.ToString() == "/")
+                    {
+                        counter1++;
+                    }
+
+                    counter1++;
+                }
+            }
+        }
+
+        if (counter1 < lettersText.Count)
+        {
+            Vector3 worldPosition = Vector3.zero;
+
+            worldPosition = Camera.main.ScreenToWorldPoint(lettersText[counter1].rectTransform.transform.position);
+            worldPosition = new Vector3(worldPosition.x, -worldPosition.y, 0f);
+
+            lettersText[counter1].letterAnimations.Play(letterAnimationType,
+                                                        startPosition,
+                                                        worldPosition,
+                                                        loop,
+                                                        speed,
+                                                        rotationSpeed,
+                                                        fontSizeNormalizedPercentDiff,
+                                                        particleSystemPrefab,
+                                                        text.fontSize,
+                                                        speed2,
+                                                        interval2,
+                                                        particleSystem2Prefab,
+                                                        soundsOn,
+                                                        fireworkWhistles,
+                                                        fireworkShots
+                                                        );
+
         }
         else
         {

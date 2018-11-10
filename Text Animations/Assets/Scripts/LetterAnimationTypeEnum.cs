@@ -2,5 +2,6 @@
 {
     NONE,
     FireWorks,
-    FireWorks2
+    FireWorks2,
+    FireWorks3
 }

@@ -110,6 +110,9 @@ public class LetterAnimations : MonoBehaviour
                 case LetterAnimationTypeEnum.FireWorks2:
                     StartFireWorks2Animation();
                     break;
+                case LetterAnimationTypeEnum.FireWorks3:
+                    StartFireWorks3Animation();
+                    break;
                 case LetterAnimationTypeEnum.NONE:
                     break;
             }
@@ -134,7 +137,6 @@ public class LetterAnimations : MonoBehaviour
         isPlaying = false;
     }
 
-
     public void StartFireWorksAnimation()
     {
         //letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, 1f);
@@ -155,9 +157,36 @@ public class LetterAnimations : MonoBehaviour
         letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, 0f);
     }
 
+    public void StartFireWorks3Animation()
+    {
+        if (trail != null)
+        {
+            Destroy(trail.gameObject);
+            trail = null;
+            trail.OnAnimationStops -= HandleOnTrailAnimationStops;
+        }
+
+        trail = GameObject.Instantiate(particleSystemPrefab, startPosition, Quaternion.identity).GetComponent<MoveCurve>();
+        trail.OnAnimationStops += HandleOnTrailAnimationStops;
+
+        //letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, 0f);
+    }
+
     private void HandleOnTrailAnimationStops()
     {
-        phase = AnimationPhaseTypeEnum.PHASE2;
+        switch(_animation)
+        {
+            case LetterAnimationTypeEnum.FireWorks:
+                break;
+            case LetterAnimationTypeEnum.FireWorks2:
+                phase = AnimationPhaseTypeEnum.PHASE2;
+                break;
+            case LetterAnimationTypeEnum.FireWorks3:
+                phase = AnimationPhaseTypeEnum.PHASE2;
+                break;
+        }
+
+
     }
 
     private void Update()
@@ -178,10 +207,84 @@ public class LetterAnimations : MonoBehaviour
             case LetterAnimationTypeEnum.FireWorks2:
                 PlayFrameFireWors2Animation();
                 break;
+            case LetterAnimationTypeEnum.FireWorks3:
+                PlayFrameFireworks3Animation();
+                break;
             case LetterAnimationTypeEnum.NONE:
 
                 break;
         }
+    }
+
+    private void PlayFrameFireworks3Animation()
+    {
+        switch (phase)
+        {
+            case AnimationPhaseTypeEnum.PHASE1:
+                if (!trail.IsPlaying)
+                {
+                    trail.Play(speed, startPosition, endPosition, true);
+                    PlayRandomSound(fireworkWhistles);
+                }
+
+                break;
+            case AnimationPhaseTypeEnum.PHASE2:
+
+                lerp += Time.deltaTime * speed2;
+                time1 += Time.deltaTime;
+
+                if (time1 < interval1)
+                {
+                    if (lerp < 1f)
+                    {
+                        letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), lerp));
+                        letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, Mathf.Lerp(1f, 0f, lerp));
+                    }
+                    else
+                    {
+                        letter.text.fontSize = ((int)Mathf.Lerp((float)fontSize, (float)fontSize * (1f + fontSizeNormalizedPercentDiff), 1f));
+                        letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, Mathf.Lerp(1f, 0f, 1f));
+                        lerp = 0f;
+                    }
+                }
+                else
+                {
+                    letter.text.color = new Color(letter.text.color.r, letter.text.color.g, letter.text.color.b, 0f);
+                    phase = AnimationPhaseTypeEnum.PHASE3;
+                    time1 = 0f;
+                    lerp = 0f;
+                }
+
+                break;
+            case AnimationPhaseTypeEnum.PHASE3:
+
+                if (particleSystem1 == null)
+                {
+                    particleSystem1 = Instantiate(particleSystem2Prefab, endPosition, Quaternion.identity).GetComponent<ParticleSystem>();
+
+                    ParticleSystem.MainModule main = particleSystem1.main;
+                    Color randomColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
+                    main.startColor = new ParticleSystem.MinMaxGradient(randomColor);
+
+                    PlayRandomSound(fireworkShots);
+                }
+                else
+                {
+                    time1 += Time.deltaTime;
+
+                    if (time1 >= 1f)
+                    {
+                        if (!particleSystem1.isPlaying)
+                        {
+                            Destroy(particleSystem1.gameObject);
+                            Stop();
+                        }
+                    }
+                }
+
+                break;
+        }
+
     }
 
     private void PlayFrameFireWors2Animation()
