@@ -3,5 +3,6 @@
     NONE,
     FireWorks,
     FireWorks2,
-    FireWorks3
+    FireWorks3,
+    FireWorks4
 }
