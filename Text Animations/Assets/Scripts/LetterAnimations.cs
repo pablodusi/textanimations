@@ -206,8 +206,6 @@ public class LetterAnimations : MonoBehaviour
                 phase = AnimationPhaseTypeEnum.PHASE2;
                 break;
         }
-
-
     }
 
     private void Update()

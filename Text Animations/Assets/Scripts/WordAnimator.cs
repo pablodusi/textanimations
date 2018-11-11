@@ -557,6 +557,11 @@ public class WordAnimator : MonoBehaviour
                 isMoving = true;
                 isRotating = true;
                 break;
+            case AnimationTypeEnum.ANIMATION17:
+                isInterpolation = false;
+                SetLettersVisible();
+                break;
+
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -856,6 +861,9 @@ public class WordAnimator : MonoBehaviour
                 break;
             case AnimationTypeEnum.ANIMATION13:
                 Animation13();
+                break;
+            case AnimationTypeEnum.ANIMATION17:
+                Animation17();
                 break;
             case AnimationTypeEnum.NONE:
                 break;
@@ -1275,18 +1283,31 @@ public class WordAnimator : MonoBehaviour
     {
         // - New Animation: "Rotation 1": It rotates from one Z point to another Z point (360 circuit)
 
-        if (Time.time > oldTimeAnimation + intervalBetweenAnimations)
+        if (Time.time > timeLastAnimation + intervalBetweenAnimations)
         {
             for (int i = 0; i < lettersText.Count; i++)
             {
                 if( ! inverseAnimation)
                 { 
-                    lettersText[i].rectTransform.rotation = Quaternion.Euler(new Vector3(0f, 0f, Mathf.Lerp(endRotation1.z, startRotation1.z, lerp)));
+                    lettersText[i].rectTransform.rotation = Quaternion.Euler(new Vector3(0f, 0f, Mathf.Lerp(endRotation1.z, startRotation1.z, lerpRotation)));
                 }
                 else
                 {
-                    lettersText[i].rectTransform.rotation = Quaternion.Euler(new Vector3(0f, 0f, Mathf.Lerp(startRotation1.z, endRotation1.z, lerp)));
+                    lettersText[i].rectTransform.rotation = Quaternion.Euler(new Vector3(0f, 0f, Mathf.Lerp(startRotation1.z, endRotation1.z, lerpRotation)));
                 }
+            }
+        }
+    }
+
+    private void Animation17()
+    {
+        if (Time.time > timeLastFrame + interval1)
+        {
+            timeLastFrame = Time.time;
+
+            for(int i = 0; i < lettersText.Count; i++)
+            {
+                lettersText[i].text.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), lettersText[i].text.color.a);
             }
         }
     }

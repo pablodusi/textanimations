@@ -51,8 +51,8 @@
         - New Animation: "Swinging 3": It swings all pair letters different from odd letters from top to bottom
         - New Animation: "Font Size 1" One letter by one, it changes font size from min to max, from 1 alpha to 0 alpha,
         when the letter animation stops, the letter dissapears, one by one to the last letter
-        - New Animation: "Random Color 1": Every frame, it changes the color of the text, randonmly.
-        - New Animation: "Random Color 2": Every frame, it changes the color of the every letter, separately, randomly
+        - New Animation: "Random Color 1": Every frame, it changes the color of the text, randonmly.         
+        - New Animation: "Random Color 2": Every frame, it changes the color of the every letter, separately, randomly  DONE
         - New Animation: "Lerp Color 1": It interpolates from one color to another, and viceversa-
         - New Animation: "Lerp Color 2": It interpolates from one color to another, using the alpha from 1 to 0
         - New Animation: "Lerp Color 3": It interpolates from one color to another, every letter separately, with start and end random colors.
@@ -62,4 +62,6 @@
         - New Animation: "Moving Poster": Every letters changes his index to the next one every "x" time
         - New Animation: "Swinging Text": Rotation X
         - Update firework animations: Start Color and End Color in Particle Systems.
-*/ 
+        - New Animation: Mix Between Animation Rotation 1 (360 Circuit) and Animation 1 or Heart Beat
+
+*/
