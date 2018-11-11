@@ -561,7 +561,10 @@ public class WordAnimator : MonoBehaviour
                 isInterpolation = false;
                 SetLettersVisible();
                 break;
-
+            case AnimationTypeEnum.ANIMATION18:
+                isInterpolation = false;
+                SetLettersVisible();
+                break;
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -864,6 +867,9 @@ public class WordAnimator : MonoBehaviour
                 break;
             case AnimationTypeEnum.ANIMATION17:
                 Animation17();
+                break;
+            case AnimationTypeEnum.ANIMATION18:
+                Animation18();
                 break;
             case AnimationTypeEnum.NONE:
                 break;
@@ -1301,6 +1307,7 @@ public class WordAnimator : MonoBehaviour
 
     private void Animation17()
     {
+        // - New Animation: "Random Color 2": Every frame, it changes the color of the every letter, separately, randomly 
         if (Time.time > timeLastFrame + interval1)
         {
             timeLastFrame = Time.time;
@@ -1308,6 +1315,23 @@ public class WordAnimator : MonoBehaviour
             for(int i = 0; i < lettersText.Count; i++)
             {
                 lettersText[i].text.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), lettersText[i].text.color.a);
+            }
+        }
+    }
+
+    private void Animation18()
+    {
+        // New Animation: "Random Color 1": Every frame, it changes the color of the text, randonmly.  
+
+        if (Time.time > timeLastFrame + interval1)
+        {
+            timeLastFrame = Time.time;
+
+            Color newColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
+
+            for (int i = 0; i < lettersText.Count; i++)
+            {
+                lettersText[i].text.color = new Color(newColor.r,newColor.g,newColor.b, lettersText[i].text.color.a);
             }
         }
     }
