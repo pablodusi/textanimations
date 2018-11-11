@@ -75,7 +75,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseFontSize: 120
   distanceBetweenLetters: {x: 84, y: 0, z: 0}
-  sizeRectTransformForThisFontSize: {x: 200, y: 200}
+  sizeRectTransformForThisFontSize: {x: 512, y: 512}
   fontName: Arial
 --- !u!222 &222224081711611568
 CanvasRenderer:

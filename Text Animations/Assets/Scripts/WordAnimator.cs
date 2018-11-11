@@ -21,6 +21,7 @@ public class WordAnimator : MonoBehaviour
     public bool soundsOn = true;
     public bool setInvisibleWhenStops;
     public bool inverseAlpha = false;
+    public bool inverseAnimation = false;
     public float speed = 1f;
     public float speed2 = 1f;
     public float rotationSpeed = 1f;
@@ -48,6 +49,7 @@ public class WordAnimator : MonoBehaviour
 	private List<Letter> lettersText;
 	private Canvas canvas;
 	private float lerp;
+    private float lerpRotation;
     private int fontSizeOld;
     private string oldText;
     private Vector3 oldPosition;
@@ -62,8 +64,11 @@ public class WordAnimator : MonoBehaviour
     private int counter1;
     private bool isInterpolation;
     private bool animationEnd;
-    private LetterAnimationTypeEnum letterAnimationType;
-    private bool inverseAnimation;
+    private LetterAnimationTypeEnum letterAnimationType;    
+    private Vector3 startRotation1;
+    private Vector3 endRotation1;
+    private bool isMoving;
+    private bool isRotating;
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -440,7 +445,9 @@ public class WordAnimator : MonoBehaviour
         isInterpolation = true;
         animationEnd = false;
         timeLastFrame = Time.time;
-        inverseAnimation = false;
+        lerpRotation = 0f;
+        isMoving = true;
+        isRotating = false;
 
         SetLettersInvisible();
         oldTimeAnimation = Time.time;
@@ -540,6 +547,16 @@ public class WordAnimator : MonoBehaviour
                 isInterpolation = true;
                 SetLettersVisible();
                 break;
+            case AnimationTypeEnum.ANIMATION16:
+                // ATTENTION: IT REQUIRES BIG RECT TRANSFORM SIZE
+
+                isInterpolation = true;
+                SetLettersVisible();
+                startRotation1 = new Vector3(0f, 0f, 0f);
+                endRotation1 = new Vector3(0f, 0f, 359f);
+                isMoving = true;
+                isRotating = true;
+                break;
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -585,6 +602,7 @@ public class WordAnimator : MonoBehaviour
         isPlaying = false;
         lerp = 0f;
         isPlayingForward = true;
+        lerpRotation = 0f;
     }
 
     private void UpdateLettersEveryFrame()
@@ -686,26 +704,49 @@ public class WordAnimator : MonoBehaviour
                 if (Time.time >= timeLastAnimation + intervalBetweenAnimations)
                 { 
 			        lerp += Time.deltaTime * speed;
-            
-			        if(lerp < 1f)
-			        {
-				        PlayFrame();
-			        }
-			        else
-			        {
+                    lerpRotation += Time.deltaTime * rotationSpeed;
+
+                    if (isMoving)
+                    {
+                        if(lerp < 1f)
+                        { 
+                            PlayFrame();
+                        }
+                        else
+                        {
+                            isMoving = false;
+                        }
+                    }
+                    
+                    if (isRotating)
+                    {
+                        if(lerpRotation < 1f)
+                        {
+                            PlayFrame();
+                        }
+                        else
+                        {
+                            isRotating = false;
+                        }
+                    }
+
+                    if ( ! isMoving && ! isRotating)
+                    {
                         isPlayingForward = !isPlayingForward;
                         timeLastAnimation = Time.time;
-                        
-				        if(loop)
-				        {
-					        Play();
-				        }
-				        else
-				        {
-					        Stop();
+                        isMoving = false;
+
+                        if (loop)
+                        {
+                            Play();
+                        }
+                        else
+                        {
+                            Stop();
                             //SetLettersInvisible();
-				        }
-			        }
+                        }
+                    }
+
                 }
             }
             else
@@ -783,6 +824,9 @@ public class WordAnimator : MonoBehaviour
                 break;
             case AnimationTypeEnum.ANIMATION15:
                 Animation15();
+                break;
+            case AnimationTypeEnum.ANIMATION16:
+                Animation16();
                 break;
             case AnimationTypeEnum.NONE:
 				break;
@@ -1223,6 +1267,26 @@ public class WordAnimator : MonoBehaviour
                 startPosition2 = new Vector3(lettersText[i].RealPosition.x - startPosition.x, lettersText[i].RealPosition.y, lettersText[i].RealPosition.z);
                 endPosition2 = new Vector3(lettersText[i].RealPosition.x + startPosition.x, lettersText[i].RealPosition.y, lettersText[i].RealPosition.z);
                 lettersText[i].rectTransform.localPosition = Vector3.Lerp(startPosition2, endPosition2, lerp);
+            }
+        }
+    }
+
+    private void Animation16()
+    {
+        // - New Animation: "Rotation 1": It rotates from one Z point to another Z point (360 circuit)
+
+        if (Time.time > oldTimeAnimation + intervalBetweenAnimations)
+        {
+            for (int i = 0; i < lettersText.Count; i++)
+            {
+                if( ! inverseAnimation)
+                { 
+                    lettersText[i].rectTransform.rotation = Quaternion.Euler(new Vector3(0f, 0f, Mathf.Lerp(endRotation1.z, startRotation1.z, lerp)));
+                }
+                else
+                {
+                    lettersText[i].rectTransform.rotation = Quaternion.Euler(new Vector3(0f, 0f, Mathf.Lerp(startRotation1.z, endRotation1.z, lerp)));
+                }
             }
         }
     }
