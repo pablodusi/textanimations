@@ -69,6 +69,8 @@ public class WordAnimator : MonoBehaviour
     private Vector3 endRotation1;
     private bool isMoving;
     private bool isRotating;
+    private string nextChar;
+    private string oldChar;
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -565,6 +567,10 @@ public class WordAnimator : MonoBehaviour
                 isInterpolation = false;
                 SetLettersVisible();
                 break;
+            case AnimationTypeEnum.ANIMATION19:
+                isInterpolation = false;
+                SetLettersVisible();
+                break;
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -870,6 +876,9 @@ public class WordAnimator : MonoBehaviour
                 break;
             case AnimationTypeEnum.ANIMATION18:
                 Animation18();
+                break;
+            case AnimationTypeEnum.ANIMATION19:
+                Animation19();
                 break;
             case AnimationTypeEnum.NONE:
                 break;
@@ -1335,6 +1344,105 @@ public class WordAnimator : MonoBehaviour
             }
         }
     }
+
+    private void Animation19()
+    {
+        // -New Animation: "Moving Poster": Every letters changes his index to the next one every "x" time
+
+        if (Time.time > timeLastFrame + interval1)
+        {
+            timeLastFrame = Time.time;
+
+            int i = 0;
+            bool ignoreChar = false;
+            int nextIndex = 0;
+
+            if(lettersText.Count > 0)
+            {
+                nextIndex = GetNextIndex(0);
+                nextChar = lettersText[0].text.text;
+                //Debug.Log("Next Char " + nextChar + " Next index = " + nextIndex.ToString());
+                
+            }
+
+            while (i < lettersText.Count)
+            {
+                ignoreChar = false;
+
+                /*
+                if(lettersText[i].text.text == " ")
+                {
+                    ignoreChar = true;
+                }*/
+
+                if (lettersText[i].text.text == "/")
+                {
+                    ignoreChar = true;
+                    i++;
+                }
+
+                if ( ! ignoreChar)
+                {
+                    string aux;
+
+                    aux = lettersText[nextIndex].text.text;
+
+                    lettersText[nextIndex].text.text = nextChar;
+                    //Debug.Log("lettersText[nextIndex].text.text " + nextChar);
+                    nextChar = aux;
+                    //Debug.Log("Next Char " + nextChar);
+                    //Debug.Log("Next Index " + nextIndex.ToString());                    
+                    //Debug.Log("New Cycle");
+                }
+
+                i++;
+                nextIndex = GetNextIndex(i);
+
+            }
+        }
+    }
+
+    private int GetNextIndex(int index)
+    {
+        int nextIndex;
+        nextIndex = index;
+        nextIndex++;
+
+        if(nextIndex < lettersText.Count)
+        {
+            int i = nextIndex;
+            bool nextIndexFound = false;
+
+            while(nextIndex < lettersText.Count && ! nextIndexFound)
+            {
+                if (lettersText[i].text.text == "/")
+                {                 
+                    i++;
+                }
+                else
+                {
+                    nextIndexFound = true;
+                    nextIndex= i;
+                }
+
+                i++;
+            }
+
+            if( ! nextIndexFound)
+            {
+                nextIndex = 0;
+            }
+        }
+        else
+        {
+            nextIndex = 0;
+        }
+        
+        return nextIndex;
+    }
+
+
+
 
     private bool AllLettersAreStopped()
     {
