@@ -30,6 +30,7 @@ public class WordAnimator : MonoBehaviour
     public float min1;
     public float max1;
     public Vector3 startPosition;
+    public Vector3 endPosition;
     //public Color textColor;                             //
 	public float fontSizeNormalizedPercentDiff;
     //public Transform startPosition;
@@ -62,6 +63,7 @@ public class WordAnimator : MonoBehaviour
     private bool isInterpolation;
     private bool animationEnd;
     private LetterAnimationTypeEnum letterAnimationType;
+    private bool inverseAnimation;
 
     public delegate void FontSizeChange(int newValue);
     public event FontSizeChange OnFontSizeChange;
@@ -167,6 +169,7 @@ public class WordAnimator : MonoBehaviour
         oldPosition = rectTransform.localPosition;
         oldAnimation = animationType;
         oldMaterial = text.material;
+        oldColor = text.color;
         animationEnd = false;
 
         isPlayingForward = true;
@@ -421,10 +424,11 @@ public class WordAnimator : MonoBehaviour
 
 	private void ClearSizeRectTransform()
 	{
+        /*
 		foreach (Letter letter in lettersText) 
 		{
 			letter.rectTransform.sizeDelta = new Vector2(512f,512f);	
-		}
+		}*/
 	}
 
 
@@ -436,10 +440,12 @@ public class WordAnimator : MonoBehaviour
         isInterpolation = true;
         animationEnd = false;
         timeLastFrame = Time.time;
+        inverseAnimation = false;
 
         SetLettersInvisible();
         oldTimeAnimation = Time.time;
         ChangeToScreenSpaceOverlayCanvas();
+
         switch (animationType) 
 		{
 			case AnimationTypeEnum.ANIMATION1:
@@ -491,6 +497,44 @@ public class WordAnimator : MonoBehaviour
                 isInterpolation = false;
                 SetLettersInvisible();
                 letterAnimationType = LetterAnimationTypeEnum.FireWorks3;
+                break;
+            case AnimationTypeEnum.ANIMATION13:
+                ClearSizeRectTransform();
+                isInterpolation = false;                
+                letterAnimationType = LetterAnimationTypeEnum.FireWorks4;
+
+                for (int counter1 = 0; counter1 < lettersText.Count; counter1++)
+                {
+                    Vector3 endPosition2 = Vector3.zero;
+
+                    endPosition2 = Camera.main.ScreenToWorldPoint(lettersText[counter1].rectTransform.transform.position);
+                    endPosition2 = new Vector3(endPosition2.x, -endPosition2.y, 0f);
+
+                    lettersText[counter1].letterAnimations.Play(letterAnimationType,
+                                                                startPosition,
+                                                                endPosition2,
+                                                                loop,
+                                                                speed,
+                                                                rotationSpeed,
+                                                                fontSizeNormalizedPercentDiff,
+                                                                particleSystemPrefab,
+                                                                text.fontSize,
+                                                                speed2,
+                                                                interval2,
+                                                                particleSystem2Prefab,
+                                                                soundsOn,
+                                                                fireworkWhistles,
+                                                                fireworkShots
+                                                                );
+
+                    //Debug.Log(lettersText[counter1].text.text.ToString());
+                    SetLettersInvisible();
+                }
+                break;
+            case AnimationTypeEnum.ANIMATION14:
+                ClearSizeRectTransform();
+                isInterpolation = true;
+                SetLettersVisible();
                 break;
             case AnimationTypeEnum.NONE:
 				break;
@@ -631,7 +675,6 @@ public class WordAnimator : MonoBehaviour
 
         UpdateLettersEveryFrame();
 
-
 		if (isPlaying) 
 		{
             if(isInterpolation)
@@ -648,7 +691,7 @@ public class WordAnimator : MonoBehaviour
 			        {
                         isPlayingForward = !isPlayingForward;
                         timeLastAnimation = Time.time;
-                    
+                        
 				        if(loop)
 				        {
 					        Play();
@@ -731,6 +774,9 @@ public class WordAnimator : MonoBehaviour
             case AnimationTypeEnum.ANIMATION8:
                 Animation8();
                 break;
+            case AnimationTypeEnum.ANIMATION14:
+                Animation14();
+                break;
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -756,6 +802,9 @@ public class WordAnimator : MonoBehaviour
                 break;
             case AnimationTypeEnum.ANIMATION12:
                 Animation12();
+                break;
+            case AnimationTypeEnum.ANIMATION13:
+                Animation13();
                 break;
             case AnimationTypeEnum.NONE:
                 break;
@@ -1099,6 +1148,67 @@ public class WordAnimator : MonoBehaviour
                 lerp = 0f;
             }
         }
+    }
+
+    private void Animation13()
+    {
+        // It shots all trails at the same time
+
+        // FireWorks 4
+
+        if(Time.time > oldTimeAnimation + intervalBetweenAnimations)
+        {
+            if( AllLettersAreStopped() )
+            {
+                oldTimeAnimation = Time.time;
+                animationEnd = true;
+                lerp = 0f;
+            }
+        }
+    }
+
+    private void Animation14()
+    {
+        // "Swinging 1": It swings all letters from top to bottom and viceversa
+
+            Vector3 startPosition2;
+            Vector3 endPosition2;
+            for (int i = 0; i < lettersText.Count; i++)
+            {  
+                if( ! isPlayingForward)
+                {
+                    startPosition2 = new Vector3(lettersText[i].RealPosition.x, lettersText[i].RealPosition.y + startPosition.y, lettersText[i].RealPosition.z);
+                    endPosition2 = new Vector3(lettersText[i].RealPosition.x, lettersText[i].RealPosition.y - startPosition.y, lettersText[i].RealPosition.z);
+
+                /*
+                if ( i == 0)
+                {
+                    Debug.Log("Real Position " + lettersText[i].RealPosition + " startPosition " + startPosition2 + " endPosition " + endPosition2);
+                }*/
+
+                    lettersText[i].rectTransform.localPosition = Vector3.Lerp(startPosition2, endPosition2, lerp);
+                }
+                else
+                {
+                    startPosition2 = new Vector3(lettersText[i].RealPosition.x, lettersText[i].RealPosition.y - startPosition.y, lettersText[i].RealPosition.z);
+                    endPosition2 = new Vector3(lettersText[i].RealPosition.x, lettersText[i].RealPosition.y + startPosition.y, lettersText[i].RealPosition.z);
+                    lettersText[i].rectTransform.localPosition = Vector3.Lerp(startPosition2, endPosition2, lerp);
+                }
+            }
+    }
+
+    private bool AllLettersAreStopped()
+    {
+        bool allLettersAreStopped = true;
+        int i = 0;
+
+        while(i < lettersText.Count && allLettersAreStopped)
+        {
+            allLettersAreStopped = ! lettersText[i].letterAnimations.isPlaying;
+            i++;
+        }
+
+        return allLettersAreStopped;
     }
 
     public static Rect RectTransformToScreenSpace(RectTransform transform)
