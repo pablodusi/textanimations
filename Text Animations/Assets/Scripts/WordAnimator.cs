@@ -536,6 +536,10 @@ public class WordAnimator : MonoBehaviour
                 isInterpolation = true;
                 SetLettersVisible();
                 break;
+            case AnimationTypeEnum.ANIMATION15:
+                isInterpolation = true;
+                SetLettersVisible();
+                break;
             case AnimationTypeEnum.NONE:
 				break;
 		}
@@ -776,6 +780,9 @@ public class WordAnimator : MonoBehaviour
                 break;
             case AnimationTypeEnum.ANIMATION14:
                 Animation14();
+                break;
+            case AnimationTypeEnum.ANIMATION15:
+                Animation15();
                 break;
             case AnimationTypeEnum.NONE:
 				break;
@@ -1195,6 +1202,29 @@ public class WordAnimator : MonoBehaviour
                     lettersText[i].rectTransform.localPosition = Vector3.Lerp(startPosition2, endPosition2, lerp);
                 }
             }
+    }
+
+    private void Animation15()
+    {
+        // New Animation: "Swinging 2": It swings all letters from left to right and viceversa
+
+        Vector3 startPosition2;
+        Vector3 endPosition2;
+        for (int i = 0; i < lettersText.Count; i++)
+        {
+            if (!isPlayingForward)
+            {
+                startPosition2 = new Vector3(lettersText[i].RealPosition.x + startPosition.x, lettersText[i].RealPosition.y, lettersText[i].RealPosition.z);
+                endPosition2 = new Vector3(lettersText[i].RealPosition.x - startPosition.x, lettersText[i].RealPosition.y, lettersText[i].RealPosition.z);
+                lettersText[i].rectTransform.localPosition = Vector3.Lerp(startPosition2, endPosition2, lerp);
+            }
+            else
+            {
+                startPosition2 = new Vector3(lettersText[i].RealPosition.x - startPosition.x, lettersText[i].RealPosition.y, lettersText[i].RealPosition.z);
+                endPosition2 = new Vector3(lettersText[i].RealPosition.x + startPosition.x, lettersText[i].RealPosition.y, lettersText[i].RealPosition.z);
+                lettersText[i].rectTransform.localPosition = Vector3.Lerp(startPosition2, endPosition2, lerp);
+            }
+        }
     }
 
     private bool AllLettersAreStopped()

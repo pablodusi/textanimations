@@ -43,7 +43,7 @@
         - New Animation: "Fireworks 3"                                                                       DONE
         - New Animation: "Fireworks 4": It shots all trails at the same time                                 DONE
         - New Animation: "Swinging 1": It swings all letters from top to bottom and viceversa                DONE
-        - New Animation: "Swinging 2": It swings all letters from left to right and viceversa
+        - New Animation: "Swinging 2": It swings all letters from left to right and viceversa		     DONE
         - New Animation: "Rotation 1": It rotates from one Z point to another Z point (360 circuit)
         - New Animation: "Rotation 2": It rotates from one Z point to another Z point and viceversa
         - New Animation: "Rotation 3": It rotates from one Y point to another Y point and viceversa
